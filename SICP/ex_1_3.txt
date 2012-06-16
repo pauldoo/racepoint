@@ -1,2 +1,0 @@
-(defn foo [& a] (reduce + (map #(* % %) (take 2 (reverse (sort a))))))
-
