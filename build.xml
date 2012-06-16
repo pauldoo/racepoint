@@ -78,11 +78,9 @@
     </target>
 
     <target name="-post-jar">
-        <copy todir="${dist.dir}">
-            <fileset file="COPYING.txt"/>
-        </copy>
         <zip destfile="${dist.dir}/RacePoint.zip">
-            <fileset file="${dist.dir}/COPYING.txt"/>
+            <fileset file="COPYING.txt"/>
+            <fileset file="README.txt"/>
             <fileset file="${dist.dir}/RacePoint.jar"/>
         </zip>
     </target>
