@@ -4,12 +4,7 @@
     <comment>
         This file contains configuration settings which cannot be access through the GUI.
     </comment>
-    
-    <!--
-        Mode: Can be either "FEDERATION" or "CLUB".
-    -->
-    <entry key="Mode">FEDERATION</entry>
-    
+        
     <!--
         ResultsFooter: Text to be displayed at the bottom of every race and pool results.
     -->

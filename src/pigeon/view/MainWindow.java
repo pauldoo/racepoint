@@ -583,7 +583,7 @@ final class MainWindow extends javax.swing.JFrame {
         MembersReporter reporter = new MembersReporter(
             season.getOrganization().toString(),
             season.getOrganization().getMembers(),
-            configuration.getMode()
+            season.getOrganization().getType()
         );
 
         writeReport(reporter);
@@ -672,8 +672,7 @@ final class MainWindow extends javax.swing.JFrame {
     private void raceresultCalculateResultsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_raceresultCalculateResultsButtonActionPerformed
         int index = raceresultsTable.getSelectedRow();
         Race race = season.getRaces().get(index);
-        boolean listClubNames = configuration.getMode() == Configuration.Mode.FEDERATION;
-        writeReport(new RaceReporter(season.getOrganization(), race, listClubNames, configuration.getCompetitions(), configuration.getResultsFooter()));
+        writeReport(new RaceReporter(season.getOrganization(), race, configuration.getCompetitions(), configuration.getResultsFooter()));
     }//GEN-LAST:event_raceresultCalculateResultsButtonActionPerformed
 
     private void clubNameTextFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_clubNameTextFocusLost
@@ -899,7 +898,7 @@ final class MainWindow extends javax.swing.JFrame {
         int index = membersList.getSelectedIndex();
         Member member = season.getOrganization().getMembers().get(index);
         try {
-            Member newMember = MemberInfo.editMember(this, member, season.getOrganization(), false, configuration.getMode());
+            Member newMember = MemberInfo.editMember(this, member, season.getOrganization(), false);
             Season newSeason = season.repReplaceMember(member, newMember);
             season = newSeason.repSetOrganization(editDistancesForMember( this.getContentPane(), newSeason.getOrganization(), newMember ));
         } catch (UserCancelledException e) {
@@ -925,7 +924,7 @@ final class MainWindow extends javax.swing.JFrame {
 
     private void memberAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memberAddButtonActionPerformed
         try {
-            Member newMember = MemberInfo.createMember(this, season.getOrganization(), configuration.getMode());
+            Member newMember = MemberInfo.createMember(this, season.getOrganization());
             season = season.repSetOrganization(editDistancesForMember(this.getContentPane(), season.getOrganization().repAddMember(newMember), newMember));
         } catch (UserCancelledException e) {
         } catch (ValidationException e) {
@@ -1025,7 +1024,6 @@ final class MainWindow extends javax.swing.JFrame {
         setSwingLAF();
 
         Configuration configuration = loadConfiguration();
-        Configuration.Mode m = configuration.getMode();
         MainWindow window = new MainWindow(configuration);
         window.setLocationRelativeTo(null);
         delayForSplashScreen();

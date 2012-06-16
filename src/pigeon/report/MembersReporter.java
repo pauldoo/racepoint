@@ -32,13 +32,13 @@ import javax.xml.transform.stream.StreamSource;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import pigeon.model.Member;
-import pigeon.view.Configuration;
+import pigeon.model.Organization;
 
 final public class MembersReporter implements Reporter
 {
     private final Document document;
 
-    public MembersReporter(String organization, Collection<Member> members, Configuration.Mode mode)
+    public MembersReporter(String organization, Collection<Member> members, Organization.Type mode)
     {
         try {
             document = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();

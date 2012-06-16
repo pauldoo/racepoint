@@ -26,6 +26,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 import pigeon.competitions.Competition;
 import pigeon.model.Constants;
+import pigeon.model.Organization;
 import pigeon.model.Season;
 import pigeon.model.Sex;
 import pigeon.model.Time;
@@ -65,8 +66,9 @@ final class RingTimeEditor extends javax.swing.JPanel
         clockTime.setDate(new Date(time.getMemberTime() % Constants.MILLISECONDS_PER_DAY));
         birdColorCombo.setSelectedItem(time.getColor());
         birdSexCombo.setSelectedItem(time.getSex());
-
-        switch (configuration.getMode()) {
+        
+        final Organization.Type organisationType = season.getOrganization().getType();
+        switch (organisationType) {
             case FEDERATION:
                 for (String name: time.getOpenCompetitionsEntered()) {
                     openCompetitionCheckboxes.get(name).setSelected(true);
@@ -92,7 +94,7 @@ final class RingTimeEditor extends javax.swing.JPanel
                 break;
 
             default:
-                throw new IllegalArgumentException("Unexpected application mode: " + configuration.getMode());
+                throw new IllegalArgumentException("Unexpected organisation type: " + organisationType);
         }
     }
 
@@ -124,8 +126,8 @@ final class RingTimeEditor extends javax.swing.JPanel
         time = time.repSetColor(((String)birdColorCombo.getSelectedItem()).trim());
         time = time.repSetSex((Sex)birdSexCombo.getSelectedItem());
 
-
-        switch (configuration.getMode()) {
+        final Organization.Type organisationType = season.getOrganization().getType();
+        switch (organisationType) {
             case FEDERATION:
                 time = time.repSetOpenCompetitionsEntered(findSelectedBoxes(openCompetitionCheckboxes));
                 time = time.repSetSectionCompetitionsEntered(findSelectedBoxes(sectionCompetitionCheckboxes));
@@ -135,7 +137,7 @@ final class RingTimeEditor extends javax.swing.JPanel
                 break;
 
             default:
-                throw new IllegalArgumentException("Unexpected application mode: " + configuration.getMode());
+                throw new IllegalArgumentException("Unexpected organisation type: " + organisationType);
         }
     }
 

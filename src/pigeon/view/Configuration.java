@@ -12,7 +12,6 @@
     WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
     ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
     OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-
 */
 
 package pigeon.view;
@@ -34,28 +33,16 @@ import pigeon.competitions.Pool;
  */
 public final class Configuration
 {
-    private final Mode mode;
     private final String resultsFooter;
     private final List<Competition> competitions;
-
-    public static enum Mode {
-        FEDERATION,
-        CLUB
-    }
 
     public Configuration(InputStream input) throws IOException
     {
         final Properties properties = new Properties();
         properties.loadFromXML(input);
 
-        this.mode = loadMode(properties);
         this.resultsFooter = loadResultsFooter(properties);
         this.competitions = loadCompetitions(properties);
-    }
-
-    private static Mode loadMode(Properties properties)
-    {
-        return Mode.valueOf(properties.getProperty("Mode"));
     }
 
     private static String loadResultsFooter(Properties properties)
@@ -98,11 +85,6 @@ public final class Configuration
             }
         }
         return Collections.unmodifiableList(result);
-    }
-
-    public Mode getMode()
-    {
-        return this.mode;
     }
 
     public List<Competition> getCompetitions()

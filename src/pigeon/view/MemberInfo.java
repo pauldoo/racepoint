@@ -32,11 +32,11 @@ final class MemberInfo extends javax.swing.JPanel {
     private Member member;
     private final Organization organization;
 
-    public MemberInfo(Member member, Organization organization, boolean editable, Configuration.Mode applicationMode) {
+    public MemberInfo(Member member, Organization organization, boolean editable) {
         this.member = member;
         this.organization = organization;
         initComponents();
-        switch (applicationMode) {
+        switch (organization.getType()) {
             case FEDERATION:
                 for (String c: Utilities.findClubNames(organization)) {
                     clubCombo.addItem(c);
@@ -250,11 +250,10 @@ final class MemberInfo extends javax.swing.JPanel {
         Component parent,
         Member member,
         Organization organization,
-        boolean newMember,
-        Configuration.Mode applicationMode
+        boolean newMember
     ) throws UserCancelledException
     {
-        MemberInfo panel = new MemberInfo(member, organization, true, applicationMode);
+        MemberInfo panel = new MemberInfo(member, organization, true);
         while (true) {
             Object[] options = { (newMember ? "Add" : "Ok"), "Cancel" };
             int result = JOptionPane.showOptionDialog(parent, panel, "Member Information", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
@@ -277,10 +276,9 @@ final class MemberInfo extends javax.swing.JPanel {
 
     public static Member createMember(
         Component parent,
-        Organization organization,
-        Configuration.Mode applicationMode
+        Organization organization
     ) throws UserCancelledException
     {
-        return editMember(parent, Member.createEmpty(), organization, true, applicationMode);
+        return editMember(parent, Member.createEmpty(), organization, true);
     }
 }

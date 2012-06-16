@@ -322,7 +322,7 @@ public final class ExtendedTest extends TestCase
         } finally {
             okIn.close();
         }
-
+        
         assertTrue("Regression failure: '" + name + "'", Arrays.equals(okData, tmpData));
         if (UPDATE_OK_FILES == false) {
             tmpFile.delete();
@@ -397,7 +397,7 @@ public final class ExtendedTest extends TestCase
     public void testRaceReports() throws IOException
     {
         for (Race race: season.getRaces()) {
-            RaceReporter reporter = new RaceReporter(season.getOrganization(), race, true, configuration.getCompetitions(), configuration.getResultsFooter());
+            RaceReporter reporter = new RaceReporter(season.getOrganization(), race, configuration.getCompetitions(), configuration.getResultsFooter());
             RegressionStreamProvider streamProvider = new RegressionStreamProvider();
             reporter.write(streamProvider);
 
@@ -408,7 +408,7 @@ public final class ExtendedTest extends TestCase
     public void testPoolReports() throws IOException
     {
         for (Race race: season.getRaces()) {
-            RaceReporter reporter = new RaceReporter(season.getOrganization(), race, true, configuration.getCompetitions(), configuration.getResultsFooter());
+            RaceReporter reporter = new RaceReporter(season.getOrganization(), race, configuration.getCompetitions(), configuration.getResultsFooter());
             RegressionStreamProvider streamProvider = new RegressionStreamProvider();
             reporter.write(streamProvider);
 
@@ -421,7 +421,7 @@ public final class ExtendedTest extends TestCase
         MembersReporter reporter = new MembersReporter(
             season.getOrganization().getName(),
             season.getOrganization().getMembers(),
-            configuration.getMode());
+            season.getOrganization().getType());
         RegressionStreamProvider streamProvider = new RegressionStreamProvider();
         reporter.write(streamProvider);
 

@@ -33,17 +33,24 @@ public final class Organization implements Serializable
 {
     private static final long serialVersionUID = 5358293332608930714L;
 
+    public static enum Type {
+        FEDERATION, CLUB
+    }    
+    
     private final String name;
+    private final Type type;
     private final List<Member> members;
     private final List<Racepoint> racepoints;
     private final List<DistanceEntry> distances;
 
     private Organization(
             String name,
+            Type type,
             List<Member> members,
             List<Racepoint> racepoints,
             List<DistanceEntry> distances) {
         this.name = name;
+        this.type = defaultIfNull(type);
         this.members = Utilities.unmodifiableSortedListCopy(members);
         this.racepoints = Utilities.unmodifiableSortedListCopy(racepoints);
         this.distances = Utilities.unmodifiableSortedListCopy(distances);
@@ -53,6 +60,7 @@ public final class Organization implements Serializable
     {
         return new Organization(
                 "",
+                Type.FEDERATION,
                 Utilities.createEmptyList(Member.class),
                 Utilities.createEmptyList(Racepoint.class),
                 Utilities.createEmptyList(DistanceEntry.class));
@@ -67,7 +75,15 @@ public final class Organization implements Serializable
         if (name.length() == 0) {
             throw new ValidationException("Organisation name is empty");
         }
-        return new Organization(name, members, racepoints, distances);
+        return new Organization(name, type, members, racepoints, distances);
+    }
+    
+    public Type getType() {
+        return defaultIfNull(type);
+    }
+    
+    public Organization repSetType(Type type) {
+        return new Organization(name, type, members, racepoints, distances);
     }
 
     @Override
@@ -94,7 +110,7 @@ public final class Organization implements Serializable
             }
         }
 
-        return new Organization(name, newMembers, racepoints, newDistances);
+        return new Organization(name, type, newMembers, racepoints, newDistances);
     }
 
     public Organization repAddRacepoint(Racepoint racepoint) throws ValidationException {
@@ -108,7 +124,7 @@ public final class Organization implements Serializable
             }
         }
 
-        return new Organization(name, members, newRacepoints, newDistances);
+        return new Organization(name, type, members, newRacepoints, newDistances);
     }
 
     public Organization repRemoveMember(Member member) {
@@ -122,7 +138,7 @@ public final class Organization implements Serializable
             }
         }
 
-        return new Organization(name, newMembers, racepoints, newDistances);
+        return new Organization(name, type, newMembers, racepoints, newDistances);
     }
 
     public Organization repRemoveRacepoint(Racepoint racepoint) {
@@ -136,7 +152,7 @@ public final class Organization implements Serializable
             }
         }
 
-        return new Organization(name, members, newRacepoints, newDistances);
+        return new Organization(name, type, members, newRacepoints, newDistances);
     }
 
     public int getNumberOfMembers() {
@@ -165,7 +181,7 @@ public final class Organization implements Serializable
     {
         DistanceEntry currentEntry = getDistanceEntry(member, racepoint);
         DistanceEntry newEntry = currentEntry.repSetDistance(distance);
-        return new Organization(name, members, racepoints,
+        return new Organization(name, type, members, racepoints,
                 Utilities.replicateListReplace(distances, currentEntry, newEntry));
     }
 
@@ -201,5 +217,9 @@ public final class Organization implements Serializable
             result = result.repSetDistance(newMember, e.getKey(), e.getValue());
         }
         return result;
+    }
+
+    private static Type defaultIfNull(Type type) {
+        return (type == null) ? Type.FEDERATION : type;
     }
 }

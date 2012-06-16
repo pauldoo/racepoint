@@ -41,7 +41,6 @@ public final class RaceReporter implements Reporter {
 
     private final Organization club;
     private final Race race;
-    private final boolean listClubNames;
     private final List<Competition> competitions;
     private final Map<String, Map<String, Integer>> entrantsCount;
     private final String resultsFooter;
@@ -50,13 +49,11 @@ public final class RaceReporter implements Reporter {
     public RaceReporter(
         Organization club,
         Race race,
-        boolean listClubNames,
         List<Competition> competitions,
         String resultsFooter
     ) {
         this.club = club;
         this.race = race;
-        this.listClubNames = listClubNames;
         this.competitions = competitions;
         this.entrantsCount = race.getBirdsEnteredInPools();
         this.resultsFooter = resultsFooter;
@@ -100,7 +97,7 @@ public final class RaceReporter implements Reporter {
                         BirdResult row = Utilities.calculateVelocity(club, race, clock, time);
 
                         row.html.append("<td>" + clock.getMember().getName() + "</td>");
-                        if (listClubNames) {
+                        if (listClubNames()) {
                             row.html.append("<td>" + clock.getMember().getClub() + "</td>");
                         }
                         if (clock.getBirdsEntered() > 0) {
@@ -133,7 +130,7 @@ public final class RaceReporter implements Reporter {
                 out.println("<h3>" + memberCount + " members sent in a total of " + birdCount + " birds</h3>");
                 out.println("<table>");
                 out.print("<tr><th>Pos.</th><th>Member</th>");
-                if (listClubNames) {
+                if (listClubNames()) {
                     out.print("<th>Club</th>");
                 }
                 out.print("<th>No.<br/>birds</th>");
@@ -260,7 +257,7 @@ public final class RaceReporter implements Reporter {
                         BirdResult row = Utilities.calculateVelocity(club, race, clock, time);
 
                         row.html.append("<td>" + clock.getMember().getName() + "</td>");
-                        if (listClubNames) {
+                        if (listClubNames()) {
                             row.html.append("<td>" + clock.getMember().getClub() + "</td>");
                         }
                         row.html.append("<td>" + time.getRingNumber() + "</td>");
@@ -270,7 +267,7 @@ public final class RaceReporter implements Reporter {
 
                 out.println("<table>");
                 out.print("<tr><th>Member</th>");
-                if (listClubNames) {
+                if (listClubNames()) {
                     out.print("<th>Club</th>");
                 }
                 out.print("<th>Ring Number</th>");
@@ -434,5 +431,16 @@ public final class RaceReporter implements Reporter {
             }
         }
         return Utilities.stringPrintf("%.1f%%", clubTakeOfFirstCompetition * 100.0);
+    }
+
+    private boolean listClubNames() {
+        switch (club.getType()) {
+            case FEDERATION:
+                return true;
+            case CLUB:
+                return false;
+            default:
+                throw new IllegalArgumentException();
+        }
     }
 }
