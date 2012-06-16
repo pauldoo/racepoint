@@ -1,3 +1,5 @@
 Add support for points and averages.
 
 Resolve CLUB vs FEDERATION switches.
+
+Drop getters for read-only fields in model files.
