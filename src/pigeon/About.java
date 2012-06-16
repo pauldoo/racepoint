@@ -20,8 +20,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import pigeon.report.Utilities;
 
 /**
     Provides access to the public information about the program.
@@ -71,24 +70,11 @@ public final class About
     */
     public static String getLicense()
     {
-        StringWriter string = new StringWriter();
-        PrintWriter writer = new PrintWriter(string);
-
-        writer.println("Copyright (c) 2005-2012 Paul Richards <paul.richards@gmail.com>");
-        writer.println("");
-        writer.println("Permission to use, copy, modify, and/or distribute this software for any");
-        writer.println("purpose with or without fee is hereby granted, provided that the above");
-        writer.println("copyright notice and this permission notice appear in all copies.");
-        writer.println("");
-        writer.println("THE SOFTWARE IS PROVIDED \"AS IS\" AND THE AUTHOR DISCLAIMS ALL WARRANTIES");
-        writer.println("WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF");
-        writer.println("MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR");
-        writer.println("ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES");
-        writer.println("WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN");
-        writer.println("ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF");
-        writer.println("OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.");
-
-        writer.close();
-        return string.toString();
+        final InputStream licenseStream = ClassLoader.getSystemResourceAsStream("COPYING.txt");
+        try {
+            return new String( Utilities.slurpStream(licenseStream) );
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 }

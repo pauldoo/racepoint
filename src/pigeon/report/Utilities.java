@@ -17,6 +17,7 @@
 package pigeon.report;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -205,6 +206,12 @@ public final class Utilities
             }
         }
     }
+    
+    public static byte[] slurpStream(final InputStream stream) throws IOException {
+        final ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        copyStream(stream, buffer);
+        return buffer.toByteArray();
+    }      
 
     public static File createTemporaryDirectory(final String prefix) throws IOException
     {
