@@ -27,8 +27,8 @@ import pigeon.report.Utilities;
 */
 public final class About
 {
-    public static final String VERSION = "0.10" + " (build " + getBuildId() + ")";
-    public static final String TITLE = "RacePoint v" + VERSION;
+    public static final String VERSION = getBuildId();
+    public static final String TITLE = "RacePoint " + VERSION;
     public static final String CREDITS = "Created by Paul Richards <paul.richards@gmail.com>.";
     public static final String WEBSITE = "http://pauldoo.com/racepoint/";
 
@@ -42,7 +42,7 @@ public final class About
 
         Returns "unknown" if this cannot be found.
     */
-    public static String getBuildId()
+    private static String getBuildId()
     {
         InputStream in = ClassLoader.getSystemResourceAsStream("BuildID.txt");
         try {

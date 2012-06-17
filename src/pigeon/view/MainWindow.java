@@ -35,6 +35,7 @@ import javax.swing.UIManager;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import pigeon.About;
+import pigeon.model.Average;
 import pigeon.model.Member;
 import pigeon.model.Organization;
 import pigeon.model.Race;
@@ -51,6 +52,7 @@ import pigeon.report.Reporter;
     Application entry point and top level window.
 
     All top level windows exist in here and are switched between using the card layout.
+    TODO: Make this class smaller.
 */
 final class MainWindow extends javax.swing.JFrame {
 
@@ -107,14 +109,18 @@ final class MainWindow extends javax.swing.JFrame {
         loadSeasonButton = new javax.swing.JButton();
         newSeasonButton = new javax.swing.JButton();
         setupClubPanel = new javax.swing.JPanel();
-        finishedButton = new javax.swing.JButton();
         organizationPanel = new javax.swing.JPanel();
         organizationNameLabel = new javax.swing.JLabel();
         clubNameText = new javax.swing.JTextField();
         clubRadioButton = new javax.swing.JRadioButton();
         federationRadioButton = new javax.swing.JRadioButton();
         organizationTypeLabel = new javax.swing.JLabel();
-        membersRacepointsSplitPane = new javax.swing.JSplitPane();
+        averagesPanel = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        averagesList = new javax.swing.JList();
+        averagesButtonPanel = new javax.swing.JPanel();
+        averageAddButton = new javax.swing.JButton();
+        averageDeleteButton = new javax.swing.JButton();
         membersPanel = new javax.swing.JPanel();
         memberListScrollPane = new javax.swing.JScrollPane();
         membersList = new javax.swing.JList();
@@ -129,6 +135,7 @@ final class MainWindow extends javax.swing.JFrame {
         racepointAddButton = new javax.swing.JButton();
         racepointEditButton = new javax.swing.JButton();
         racepointDeleteButton = new javax.swing.JButton();
+        finishedButton = new javax.swing.JButton();
         viewingSeason = new javax.swing.JPanel();
         raceresultPanel = new javax.swing.JPanel();
         raceresultListScrollPane = new javax.swing.JScrollPane();
@@ -195,18 +202,6 @@ final class MainWindow extends javax.swing.JFrame {
 
         setupClubPanel.setLayout(new java.awt.GridBagLayout());
 
-        finishedButton.setText("Finished");
-        finishedButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                finishedButtonActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        setupClubPanel.add(finishedButton, gridBagConstraints);
-
         organizationPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Organisation Information"));
         organizationPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -215,7 +210,6 @@ final class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         organizationPanel.add(organizationNameLabel, gridBagConstraints);
 
         clubNameText.addFocusListener(new java.awt.event.FocusAdapter() {
@@ -229,7 +223,6 @@ final class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.gridwidth = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         organizationPanel.add(clubNameText, gridBagConstraints);
 
         organizationTypeRadioGroup.add(clubRadioButton);
@@ -243,7 +236,6 @@ final class MainWindow extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         organizationPanel.add(clubRadioButton, gridBagConstraints);
 
         organizationTypeRadioGroup.add(federationRadioButton);
@@ -257,7 +249,6 @@ final class MainWindow extends javax.swing.JFrame {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 2;
         gridBagConstraints.gridy = 1;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         organizationPanel.add(federationRadioButton, gridBagConstraints);
 
         organizationTypeLabel.setText("Organisation Type:");
@@ -265,17 +256,52 @@ final class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         organizationPanel.add(organizationTypeLabel, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.weightx = 1.0;
         setupClubPanel.add(organizationPanel, gridBagConstraints);
 
-        membersRacepointsSplitPane.setBorder(null);
-        membersRacepointsSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        membersRacepointsSplitPane.setResizeWeight(0.66666);
-        membersRacepointsSplitPane.setContinuousLayout(true);
+        averagesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Averages"));
+        averagesPanel.setLayout(new java.awt.BorderLayout());
+
+        averagesList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        averagesList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                averagesListValueChanged(evt);
+            }
+        });
+        jScrollPane1.setViewportView(averagesList);
+
+        averagesPanel.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
+        averagesButtonPanel.setLayout(new javax.swing.BoxLayout(averagesButtonPanel, javax.swing.BoxLayout.LINE_AXIS));
+
+        averageAddButton.setText("Add Average");
+        averageAddButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                averageAddButtonActionPerformed(evt);
+            }
+        });
+        averagesButtonPanel.add(averageAddButton);
+
+        averageDeleteButton.setText("Delete Average");
+        averageDeleteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                averageDeleteButtonActionPerformed(evt);
+            }
+        });
+        averagesButtonPanel.add(averageDeleteButton);
+
+        averagesPanel.add(averagesButtonPanel, java.awt.BorderLayout.NORTH);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        setupClubPanel.add(averagesPanel, gridBagConstraints);
 
         membersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Member Information"));
         membersPanel.setLayout(new java.awt.BorderLayout());
@@ -290,6 +316,8 @@ final class MainWindow extends javax.swing.JFrame {
         memberListScrollPane.setViewportView(membersList);
 
         membersPanel.add(memberListScrollPane, java.awt.BorderLayout.CENTER);
+
+        memberButtonPanel.setLayout(new javax.swing.BoxLayout(memberButtonPanel, javax.swing.BoxLayout.LINE_AXIS));
 
         memberAddButton.setText("Add Member");
         memberAddButton.addActionListener(new java.awt.event.ActionListener() {
@@ -315,9 +343,14 @@ final class MainWindow extends javax.swing.JFrame {
         });
         memberButtonPanel.add(memberDeleteButton);
 
-        membersPanel.add(memberButtonPanel, java.awt.BorderLayout.SOUTH);
+        membersPanel.add(memberButtonPanel, java.awt.BorderLayout.NORTH);
 
-        membersRacepointsSplitPane.setLeftComponent(membersPanel);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.0;
+        setupClubPanel.add(membersPanel, gridBagConstraints);
 
         racepointsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Racepoint Information"));
         racepointsPanel.setLayout(new java.awt.BorderLayout());
@@ -332,6 +365,8 @@ final class MainWindow extends javax.swing.JFrame {
         racepointListScrollPane.setViewportView(racepointsList);
 
         racepointsPanel.add(racepointListScrollPane, java.awt.BorderLayout.CENTER);
+
+        racepointButtonPanel.setLayout(new javax.swing.BoxLayout(racepointButtonPanel, javax.swing.BoxLayout.LINE_AXIS));
 
         racepointAddButton.setText("Add Racepoint");
         racepointAddButton.addActionListener(new java.awt.event.ActionListener() {
@@ -357,17 +392,25 @@ final class MainWindow extends javax.swing.JFrame {
         });
         racepointButtonPanel.add(racepointDeleteButton);
 
-        racepointsPanel.add(racepointButtonPanel, java.awt.BorderLayout.SOUTH);
-
-        membersRacepointsSplitPane.setRightComponent(racepointsPanel);
+        racepointsPanel.add(racepointButtonPanel, java.awt.BorderLayout.NORTH);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        setupClubPanel.add(membersRacepointsSplitPane, gridBagConstraints);
+        setupClubPanel.add(racepointsPanel, gridBagConstraints);
+
+        finishedButton.setText("Finished");
+        finishedButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                finishedButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        setupClubPanel.add(finishedButton, gridBagConstraints);
 
         getContentPane().add(setupClubPanel, "setupClub");
 
@@ -938,6 +981,8 @@ final class MainWindow extends javax.swing.JFrame {
         raceresultEditButton.setEnabled( raceresultsTable.getSelectedRow() != -1 );
         raceresultDeleteButton.setEnabled( raceresultsTable.getSelectedRow() != -1 );
         raceresultCalculateResultsButton.setEnabled( raceresultsTable.getSelectedRow() != -1 );
+        
+        averageDeleteButton.setEnabled(averagesList.getSelectedIndex() != -1);
     }
 
     private void refreshMenus(String cardName) {
@@ -975,6 +1020,29 @@ final class MainWindow extends javax.swing.JFrame {
         }
         this.season = season.repSetOrganization(season.getOrganization().repSetType(newType));
     }//GEN-LAST:event_organizationTypeActionPerformed
+
+    private void averageAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_averageAddButtonActionPerformed
+        String average = JOptionPane.showInputDialog(this, "Name for average", "Add average", JOptionPane.QUESTION_MESSAGE,null,null, "").toString();
+        if (average != null) {
+            try {
+                season = season.repSetOrganization(season.getOrganization().repAddAverage(new Average(average)));
+            } catch (ValidationException e) {
+                e.displayErrorDialog(this);
+            }
+            reloadAveragesList();
+        }
+    }//GEN-LAST:event_averageAddButtonActionPerformed
+
+    private void averageDeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_averageDeleteButtonActionPerformed
+        Average average = (Average)averagesList.getSelectedValue();
+        season = season.repSetOrganization(season.getOrganization().repRemoveAverage(average));
+        reloadAveragesList();
+        JOptionPane.showMessageDialog(this, "Averages '" + average + "' deleted.");
+    }//GEN-LAST:event_averageDeleteButtonActionPerformed
+
+    private void averagesListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_averagesListValueChanged
+        refreshButtons();
+    }//GEN-LAST:event_averagesListValueChanged
 
     private static Organization editDistancesForMember(Component parent, Organization organization, Member member) throws UserCancelledException {
         return DistanceEditor.editMemberDistances(parent, member, organization);
@@ -1062,6 +1130,11 @@ final class MainWindow extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutItem;
+    private javax.swing.JButton averageAddButton;
+    private javax.swing.JButton averageDeleteButton;
+    private javax.swing.JPanel averagesButtonPanel;
+    private javax.swing.JList averagesList;
+    private javax.swing.JPanel averagesPanel;
     private javax.swing.JMenuItem closeItem;
     private javax.swing.JTextField clubNameText;
     private javax.swing.JRadioButton clubRadioButton;
@@ -1072,6 +1145,7 @@ final class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton finishedButton;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton loadSeasonButton;
     private javax.swing.JPanel mainMenuPanel;
     private javax.swing.JButton memberAddButton;
@@ -1081,7 +1155,6 @@ final class MainWindow extends javax.swing.JFrame {
     private javax.swing.JScrollPane memberListScrollPane;
     private javax.swing.JList membersList;
     private javax.swing.JPanel membersPanel;
-    private javax.swing.JSplitPane membersRacepointsSplitPane;
     private javax.swing.JMenuBar menuBar;
     private javax.swing.JSeparator menuSeparator1;
     private javax.swing.JButton newSeasonButton;
@@ -1115,4 +1188,7 @@ final class MainWindow extends javax.swing.JFrame {
     private javax.swing.JPanel viewingSeason;
     // End of variables declaration//GEN-END:variables
 
+    private void reloadAveragesList() {
+        averagesList.setListData(season.getOrganization().getAverages().toArray());
+    }
 }

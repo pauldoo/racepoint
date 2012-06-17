@@ -1,3 +1,14 @@
 Add support for points and averages.
 
+    Averages, print off seperately.
+
+    Configurable list of competitions.
+
+    Total dist / total time (not avg of averages).
+
+    Per member, taking best bird in each race (so overall average will
+    cover several different birds).
+
+    Each race may count towards 0 or more competitions.
+
 Drop getters for read-only fields in model files.
