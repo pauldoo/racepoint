@@ -12,3 +12,8 @@ Add support for points and averages.
     Each race may count towards 0 or more competitions.
 
 Drop getters for read-only fields in model files.
+
+Update unit tests for averages.
+
+    Including regression extended test.
+
