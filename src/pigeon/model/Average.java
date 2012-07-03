@@ -22,8 +22,16 @@ public final class Average implements Serializable, Comparable<Average> {
         
     public final String name;
     
-    public Average(String name) {
+    private Average(String name) {
         this.name = name;
+    }
+    
+    public static Average create(String name) throws ValidationException {
+        name = name.trim();
+        if (name.length() == 0) {
+            throw new ValidationException("Average name is empty");
+        }
+        return new Average(name);
     }
     
     @Override

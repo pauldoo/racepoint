@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
@@ -105,6 +106,7 @@ final class MainWindow extends javax.swing.JFrame {
         java.awt.GridBagConstraints gridBagConstraints;
 
         organizationTypeRadioGroup = new javax.swing.ButtonGroup();
+        mainPanel = new javax.swing.JPanel();
         mainMenuPanel = new javax.swing.JPanel();
         loadSeasonButton = new javax.swing.JButton();
         newSeasonButton = new javax.swing.JButton();
@@ -146,6 +148,8 @@ final class MainWindow extends javax.swing.JFrame {
         raceresultDeleteButton = new javax.swing.JButton();
         raceresultCalculateResultsButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
+        statusBarPanel = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openItem = new javax.swing.JMenuItem();
@@ -170,7 +174,8 @@ final class MainWindow extends javax.swing.JFrame {
                 formWindowClosing(evt);
             }
         });
-        getContentPane().setLayout(new java.awt.CardLayout());
+
+        mainPanel.setLayout(new java.awt.CardLayout());
 
         mainMenuPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -198,7 +203,7 @@ final class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.insets = new java.awt.Insets(5, 5, 5, 5);
         mainMenuPanel.add(newSeasonButton, gridBagConstraints);
 
-        getContentPane().add(mainMenuPanel, "mainMenu");
+        mainPanel.add(mainMenuPanel, "mainMenu");
 
         setupClubPanel.setLayout(new java.awt.GridBagLayout());
 
@@ -412,7 +417,7 @@ final class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         setupClubPanel.add(finishedButton, gridBagConstraints);
 
-        getContentPane().add(setupClubPanel, "setupClub");
+        mainPanel.add(setupClubPanel, "setupClub");
 
         viewingSeason.setLayout(new java.awt.GridBagLayout());
 
@@ -487,7 +492,16 @@ final class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.weighty = 1.0;
         viewingSeason.add(raceresultPanel, gridBagConstraints);
 
-        getContentPane().add(viewingSeason, "viewingSeason");
+        mainPanel.add(viewingSeason, "viewingSeason");
+
+        getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
+
+        statusBarPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+
+        jLabel2.setText("This version of RacePoint is for testing only.");
+        statusBarPanel.add(jLabel2);
+
+        getContentPane().add(statusBarPanel, java.awt.BorderLayout.SOUTH);
 
         fileMenu.setText("File");
 
@@ -948,7 +962,8 @@ final class MainWindow extends javax.swing.JFrame {
             clubNameText.setText(season.getOrganization().getName());
             clubRadioButton.setSelected(season.getOrganization().getType() == Organization.Type.CLUB);
             federationRadioButton.setSelected(season.getOrganization().getType() == Organization.Type.FEDERATION);
-            
+
+            reloadAveragesList();
             reloadMembersList();
             reloadRacepointsList();
             reloadRacesTable();
@@ -993,7 +1008,7 @@ final class MainWindow extends javax.swing.JFrame {
     }
 
     private void switchToCard(String cardName) {
-        Container parent = this.getContentPane();
+        JComponent parent = mainPanel;
         ((CardLayout)parent.getLayout()).show(parent, cardName);
         reloadControlData(cardName);
     }
@@ -1025,7 +1040,7 @@ final class MainWindow extends javax.swing.JFrame {
         String average = JOptionPane.showInputDialog(this, "Name for average", "Add average", JOptionPane.QUESTION_MESSAGE,null,null, "").toString();
         if (average != null) {
             try {
-                season = season.repSetOrganization(season.getOrganization().repAddAverage(new Average(average)));
+                season = season.repSetOrganization(season.getOrganization().repAddAverage(Average.create(average)));
             } catch (ValidationException e) {
                 e.displayErrorDialog(this);
             }
@@ -1145,9 +1160,11 @@ final class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton finishedButton;
     private javax.swing.JMenu helpMenu;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton loadSeasonButton;
     private javax.swing.JPanel mainMenuPanel;
+    private javax.swing.JPanel mainPanel;
     private javax.swing.JButton memberAddButton;
     private javax.swing.JPanel memberButtonPanel;
     private javax.swing.JButton memberDeleteButton;
@@ -1182,6 +1199,7 @@ final class MainWindow extends javax.swing.JFrame {
     private javax.swing.JMenuItem saveItem;
     private javax.swing.JMenuItem setupClubItem;
     private javax.swing.JPanel setupClubPanel;
+    private javax.swing.JPanel statusBarPanel;
     private javax.swing.JMenuItem viewMemberDistancesItem;
     private javax.swing.JMenuItem viewMembersItem;
     private javax.swing.JMenuItem viewRacepointDistancesItem;

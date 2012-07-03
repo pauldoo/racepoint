@@ -28,7 +28,10 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
+import javax.swing.JCheckBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -36,6 +39,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SortingFocusTraversalPolicy;
 import pigeon.competitions.Competition;
+import pigeon.model.Average;
 import pigeon.model.Organization;
 import pigeon.model.Race;
 import pigeon.model.Racepoint;
@@ -95,6 +99,7 @@ final class RaceSummary extends javax.swing.JPanel {
     private final Map<String, JTextField[]> raceEntrantsCountFields = new TreeMap<String, JTextField[]>();
     private final Map<String, Map<String, JTextField>> poolEntrantsCountFields = new TreeMap<String, Map<String, JTextField>>();
     private final Map<String, List<JTextField>> prizeFields = new TreeMap<String, List<JTextField>>();
+    private final Map<Average, JCheckBox> averagesCheckBoxes = new TreeMap<Average, JCheckBox>();
 
     public RaceSummary(Race race, Organization club, Configuration configuration, boolean editable) {
         this.race = race;
@@ -165,6 +170,12 @@ final class RaceSummary extends javax.swing.JPanel {
         }
 
         updateHoursOfDarknessEnabledStatus();
+        {
+            for (Map.Entry<Average, JCheckBox> i : averagesCheckBoxes.entrySet()) {
+                final boolean isSelected = race.getAverages().contains(i.getKey());
+                i.getValue().setSelected(isSelected);
+            }
+        }
     }
 
     private void addComboOptions(Organization club, Configuration configuration) {
@@ -179,6 +190,7 @@ final class RaceSummary extends javax.swing.JPanel {
         populateRaceEntrantsCountPanel(raceEntrantsCountPanel, raceEntrantsCountFields, club);
         populatePoolEntrantsCountPanel(poolEntrantsCountPanel, poolEntrantsCountFields, club, configuration);
         populatePrizesPanel(prizesPanel, prizeFields, club);
+        populateAveragesPanel(averagesPanel, averagesCheckBoxes, club);
     }
 
     private boolean hoursOfDarknessEnabled()
@@ -222,6 +234,7 @@ final class RaceSummary extends javax.swing.JPanel {
         raceEntrantsCountPanel = new javax.swing.JPanel();
         poolEntrantsCountPanel = new javax.swing.JPanel();
         prizesPanel = new javax.swing.JPanel();
+        averagesPanel = new javax.swing.JPanel();
 
         setLayout(new java.awt.BorderLayout());
 
@@ -320,6 +333,7 @@ final class RaceSummary extends javax.swing.JPanel {
         jTabbedPane1.addTab("No. Race Entrants", raceEntrantsCountPanel);
         jTabbedPane1.addTab("No. Pool Entrants", poolEntrantsCountPanel);
         jTabbedPane1.addTab("Prizes", prizesPanel);
+        jTabbedPane1.addTab("Averages", averagesPanel);
 
         add(jTabbedPane1, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
@@ -330,6 +344,7 @@ private void daysCoveredComboActionPerformed(java.awt.event.ActionEvent evt) {//
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel averagesPanel;
     private pigeon.view.DateTimeComponent darknessBegins;
     private javax.swing.JLabel darknessBeginsText;
     private pigeon.view.DateTimeComponent darknessEnds;
@@ -407,6 +422,16 @@ private void daysCoveredComboActionPerformed(java.awt.event.ActionEvent evt) {//
                 prizes.put(i.getKey(), list);
             }
             race = race.repSetPrizes(prizes);
+        }
+        
+        {
+            Set<Average> averages = new TreeSet<Average>();
+            for (Map.Entry<Average, JCheckBox> i : averagesCheckBoxes.entrySet()) {
+                if (i.getValue().isSelected()) {
+                    averages.add(i.getKey());
+                }
+            }
+            race = race.repSetAverages(averages);
         }
     }
 
@@ -605,6 +630,14 @@ private void daysCoveredComboActionPerformed(java.awt.event.ActionEvent evt) {//
                 list.add(field);
             }
             fields.put(section, list);
+        }
+    }
+
+    private static void populateAveragesPanel(JPanel averagesPanel, Map<Average, JCheckBox> averagesCheckBoxes, Organization club) {
+        for (Average avg: club.getAverages()) {
+            JCheckBox checkBox = new JCheckBox(avg.name);
+            averagesCheckBoxes.put(avg, checkBox);
+            averagesPanel.add(checkBox);
         }
     }
 }

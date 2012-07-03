@@ -22,7 +22,9 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
     Stores information about a race.
@@ -53,6 +55,9 @@ public final class Race implements Serializable, Comparable<Race> {
 
     // Map from Section -> Prize list
     private final Map<String, List<Double>> prizes;
+    
+    // The list of averages that this race counts towards
+    private final Set<Average> averages;
 
     private Race(
             Racepoint racepoint,
@@ -65,7 +70,8 @@ public final class Race implements Serializable, Comparable<Race> {
             Map<String, Integer> membersEntered,
             Map<String, Integer> birdsEntered,
             Map<String, Map<String, Integer>> birdsEnteredInPools,
-            Map<String, List<Double>> prizes
+            Map<String, List<Double>> prizes,
+            Set<Average> averages
     ) {
         this.racepoint = racepoint;
         this.liberationDate = (Date)liberationDate.clone();
@@ -78,6 +84,7 @@ public final class Race implements Serializable, Comparable<Race> {
         this.birdsEntered = Utilities.unmodifiableMapCopy(birdsEntered);
         this.birdsEnteredInPools = Utilities.unmodifiableMapMapCopy(birdsEnteredInPools);
         this.prizes = Utilities.unmodifiableMapListCopy(prizes);
+        this.averages = Utilities.unmodifiableSetCopy(averages);
     }
 
     public static Race createEmpty()
@@ -101,7 +108,8 @@ public final class Race implements Serializable, Comparable<Race> {
                 Utilities.createEmptyMap(String.class, Integer.class),
                 Utilities.createEmptyMap(String.class, Integer.class),
                 new TreeMap<String, Map<String, Integer>>(),
-                new TreeMap<String, List<Double>>());
+                new TreeMap<String, List<Double>>(),
+                new TreeSet<Average>());
     }
 
     public Racepoint getRacepoint() {
@@ -109,7 +117,7 @@ public final class Race implements Serializable, Comparable<Race> {
     }
 
     public Race repSetRacepoint(Racepoint racepoint) {
-        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, clocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes);
+        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, clocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes, averages);
     }
 
     public Date getLiberationDate() {
@@ -117,7 +125,7 @@ public final class Race implements Serializable, Comparable<Race> {
     }
 
     public Race repSetLiberationDate(Date liberationDate) {
-        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, clocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes);
+        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, clocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes, averages);
     }
 
     public boolean hasHoursOfDarkness()
@@ -138,7 +146,7 @@ public final class Race implements Serializable, Comparable<Race> {
         if (ends < 0 || ends >= NOON) {
             throw new ValidationException("Darkness expected to end between midnight and 12-noon");
         }
-        return new Race(racepoint, liberationDate, daysCovered, begins, ends, windDirection, clocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes);
+        return new Race(racepoint, liberationDate, daysCovered, begins, ends, windDirection, clocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes, averages);
     }
 
     public int getDarknessBegins()
@@ -196,7 +204,7 @@ public final class Race implements Serializable, Comparable<Race> {
         if (!(daysCovered >= 1 && daysCovered <= 3)) {
             throw new ValidationException("Days covered should be between 1 and 3");
         }
-        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, clocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes);
+        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, clocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes, averages);
     }
 
     public String getWindDirection() {
@@ -204,7 +212,7 @@ public final class Race implements Serializable, Comparable<Race> {
     }
 
     public Race repSetWindDirection(String windDirection) {
-        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, clocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes);
+        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, clocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes, averages);
     }
 
     @Override
@@ -216,13 +224,13 @@ public final class Race implements Serializable, Comparable<Race> {
     public Race repAddClock(Clock clock) throws ValidationException
     {
         List<Clock> newClocks = Utilities.replicateListAdd(clocks, clock);
-        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, newClocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes);
+        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, newClocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes, averages);
     }
 
     public Race repRemoveClock(Clock clock) throws ValidationException
     {
         List<Clock> newClocks = Utilities.replicateListRemove(clocks, clock);
-        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, newClocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes);
+        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, newClocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes, averages);
     }
 
     public Race repReplaceClock(Clock oldClock, Clock newClock) throws ValidationException
@@ -256,7 +264,7 @@ public final class Race implements Serializable, Comparable<Race> {
 
     public Race repSetMembersEntered(Map<String, Integer> membersEntered)
     {
-        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, clocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes);
+        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, clocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes, averages);
     }
 
     public Map<String, Integer> getBirdsEntered()
@@ -270,7 +278,7 @@ public final class Race implements Serializable, Comparable<Race> {
 
     public Race repSetBirdsEntered(Map<String, Integer> birdsEntered)
     {
-        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, clocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes);
+        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, clocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes, averages);
     }
 
     public int getTotalNumberOfMembersEntered()
@@ -302,7 +310,7 @@ public final class Race implements Serializable, Comparable<Race> {
 
     public Race repSetBirdsEnteredInPools(Map<String, Map<String, Integer>> birdsEnteredInPools)
     {
-        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, clocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes);
+        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, clocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes, averages);
     }
 
     public Map<String, List<Double>> getPrizes()
@@ -316,7 +324,7 @@ public final class Race implements Serializable, Comparable<Race> {
 
     public Race repSetPrizes(Map<String, List<Double>> prizes)
     {
-        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, clocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes);
+        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, clocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes, averages);
     }
 
     public Race repReplaceMember(Member oldMember, Member newMember)
@@ -329,6 +337,15 @@ public final class Race implements Serializable, Comparable<Race> {
                 newClocks.add(c);
             }
         }
-        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, newClocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes);
+        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, newClocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes, averages);
+    }
+    
+    public Set<Average> getAverages()
+    {
+        return averages;
+    }
+
+    public Race repSetAverages(Set<Average> averages) {
+        return new Race(racepoint, liberationDate, daysCovered, darknessBegins, darknessEnds, windDirection, clocks, membersEntered, birdsEntered, birdsEnteredInPools, prizes, averages);
     }
 }
