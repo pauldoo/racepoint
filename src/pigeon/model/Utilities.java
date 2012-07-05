@@ -207,4 +207,8 @@ public final class Utilities
     {
         return Collections.unmodifiableSet(new TreeSet<T>(set));
     }
+    
+     static <T> T defaultIfNull(T val, T def) {
+        return (val == null) ? def : val;
+    }
 }

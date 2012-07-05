@@ -84,7 +84,7 @@ public final class Race implements Serializable, Comparable<Race> {
         this.birdsEntered = Utilities.unmodifiableMapCopy(birdsEntered);
         this.birdsEnteredInPools = Utilities.unmodifiableMapMapCopy(birdsEnteredInPools);
         this.prizes = Utilities.unmodifiableMapListCopy(prizes);
-        this.averages = Utilities.unmodifiableSetCopy(averages);
+        this.averages = Utilities.unmodifiableSetCopy(Utilities.defaultIfNull(averages, Utilities.createEmtpySet(Average.class)));
     }
 
     public static Race createEmpty()
@@ -342,7 +342,7 @@ public final class Race implements Serializable, Comparable<Race> {
     
     public Set<Average> getAverages()
     {
-        return averages;
+        return Utilities.defaultIfNull(averages, Utilities.createEmtpySet(Average.class));
     }
 
     public Race repSetAverages(Set<Average> averages) {

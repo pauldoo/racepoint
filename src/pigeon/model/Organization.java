@@ -52,11 +52,11 @@ public final class Organization implements Serializable
             List<DistanceEntry> distances,
             List<Average> averages) {
         this.name = name;
-        this.type = defaultIfNull(type, Type.FEDERATION);
+        this.type = Utilities.defaultIfNull(type, Type.FEDERATION);
         this.members = Utilities.unmodifiableSortedListCopy(members);
         this.racepoints = Utilities.unmodifiableSortedListCopy(racepoints);
         this.distances = Utilities.unmodifiableSortedListCopy(distances);
-        this.averages = Utilities.unmodifiableSortedListCopy(defaultIfNull(averages, Utilities.createEmptyList(Average.class)));
+        this.averages = Utilities.unmodifiableSortedListCopy(Utilities.defaultIfNull(averages, Utilities.createEmptyList(Average.class)));
     }
 
     public static Organization createEmpty()
@@ -83,7 +83,7 @@ public final class Organization implements Serializable
     }
     
     public Type getType() {
-        return defaultIfNull(type, Type.FEDERATION);
+        return Utilities.defaultIfNull(type, Type.FEDERATION);
     }
     
     public Organization repSetType(Type type) {
@@ -223,19 +223,15 @@ public final class Organization implements Serializable
         return result;
     }
 
-    private static <T> T defaultIfNull(T val, T def) {
-        return (val == null) ? def : val;
-    }
-
     public List<Average> getAverages() {
-        return averages;
+        return Utilities.defaultIfNull(averages, Utilities.createEmptyList(Average.class));
     }
     
     public Organization repRemoveAverage(Average average) {
-        return new Organization(name, type, members, racepoints, distances, Utilities.replicateListRemove(averages, average));
+        return new Organization(name, type, members, racepoints, distances, Utilities.replicateListRemove(getAverages(), average));
     }
 
     public Organization repAddAverage(Average average) throws ValidationException {
-        return new Organization(name, type, members, racepoints, distances, Utilities.replicateListAdd(averages, average));
+        return new Organization(name, type, members, racepoints, distances, Utilities.replicateListAdd(getAverages(), average));
     }
 }
