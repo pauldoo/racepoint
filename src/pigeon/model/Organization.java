@@ -42,21 +42,18 @@ public final class Organization implements Serializable
     private final List<Member> members;
     private final List<Racepoint> racepoints;
     private final List<DistanceEntry> distances;
-    private final List<Average> averages;
 
     private Organization(
             String name,
             Type type,
             List<Member> members,
             List<Racepoint> racepoints,
-            List<DistanceEntry> distances,
-            List<Average> averages) {
+            List<DistanceEntry> distances) {
         this.name = name;
         this.type = Utilities.defaultIfNull(type, Type.FEDERATION);
         this.members = Utilities.unmodifiableSortedListCopy(members);
         this.racepoints = Utilities.unmodifiableSortedListCopy(racepoints);
         this.distances = Utilities.unmodifiableSortedListCopy(distances);
-        this.averages = Utilities.unmodifiableSortedListCopy(Utilities.defaultIfNull(averages, Utilities.createEmptyList(Average.class)));
     }
 
     public static Organization createEmpty()
@@ -66,8 +63,7 @@ public final class Organization implements Serializable
                 Type.FEDERATION,
                 Utilities.createEmptyList(Member.class),
                 Utilities.createEmptyList(Racepoint.class),
-                Utilities.createEmptyList(DistanceEntry.class),
-                Utilities.createEmptyList(Average.class));
+                Utilities.createEmptyList(DistanceEntry.class));
     }
 
     public String getName() {
@@ -79,7 +75,7 @@ public final class Organization implements Serializable
         if (name.length() == 0) {
             throw new ValidationException("Organisation name is empty");
         }
-        return new Organization(name, type, members, racepoints, distances, averages);
+        return new Organization(name, type, members, racepoints, distances);
     }
     
     public Type getType() {
@@ -87,7 +83,7 @@ public final class Organization implements Serializable
     }
     
     public Organization repSetType(Type type) {
-        return new Organization(name, type, members, racepoints, distances, averages);
+        return new Organization(name, type, members, racepoints, distances);
     }
 
     @Override
@@ -114,7 +110,7 @@ public final class Organization implements Serializable
             }
         }
 
-        return new Organization(name, type, newMembers, racepoints, newDistances, averages);
+        return new Organization(name, type, newMembers, racepoints, newDistances);
     }
 
     public Organization repAddRacepoint(Racepoint racepoint) throws ValidationException {
@@ -128,7 +124,7 @@ public final class Organization implements Serializable
             }
         }
 
-        return new Organization(name, type, members, newRacepoints, newDistances, averages);
+        return new Organization(name, type, members, newRacepoints, newDistances);
     }
 
     public Organization repRemoveMember(Member member) {
@@ -142,7 +138,7 @@ public final class Organization implements Serializable
             }
         }
 
-        return new Organization(name, type, newMembers, racepoints, newDistances, averages);
+        return new Organization(name, type, newMembers, racepoints, newDistances);
     }
 
     public Organization repRemoveRacepoint(Racepoint racepoint) {
@@ -156,7 +152,7 @@ public final class Organization implements Serializable
             }
         }
 
-        return new Organization(name, type, members, newRacepoints, newDistances, averages);
+        return new Organization(name, type, members, newRacepoints, newDistances);
     }
 
     public int getNumberOfMembers() {
@@ -186,7 +182,7 @@ public final class Organization implements Serializable
         DistanceEntry currentEntry = getDistanceEntry(member, racepoint);
         DistanceEntry newEntry = currentEntry.repSetDistance(distance);
         return new Organization(name, type, members, racepoints,
-                Utilities.replicateListReplace(distances, currentEntry, newEntry), averages);
+                Utilities.replicateListReplace(distances, currentEntry, newEntry));
     }
 
     public Map<Racepoint, Distance> getDistancesForMember(Member member) {
@@ -221,17 +217,5 @@ public final class Organization implements Serializable
             result = result.repSetDistance(newMember, e.getKey(), e.getValue());
         }
         return result;
-    }
-
-    public List<Average> getAverages() {
-        return Utilities.defaultIfNull(averages, Utilities.createEmptyList(Average.class));
-    }
-    
-    public Organization repRemoveAverage(Average average) {
-        return new Organization(name, type, members, racepoints, distances, Utilities.replicateListRemove(getAverages(), average));
-    }
-
-    public Organization repAddAverage(Average average) throws ValidationException {
-        return new Organization(name, type, members, racepoints, distances, Utilities.replicateListAdd(getAverages(), average));
     }
 }

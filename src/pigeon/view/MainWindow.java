@@ -117,12 +117,6 @@ final class MainWindow extends javax.swing.JFrame {
         clubRadioButton = new javax.swing.JRadioButton();
         federationRadioButton = new javax.swing.JRadioButton();
         organizationTypeLabel = new javax.swing.JLabel();
-        averagesPanel = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        averagesList = new javax.swing.JList();
-        averagesButtonPanel = new javax.swing.JPanel();
-        averageAddButton = new javax.swing.JButton();
-        averageDeleteButton = new javax.swing.JButton();
         membersPanel = new javax.swing.JPanel();
         memberListScrollPane = new javax.swing.JScrollPane();
         membersList = new javax.swing.JList();
@@ -267,46 +261,6 @@ final class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
         setupClubPanel.add(organizationPanel, gridBagConstraints);
-
-        averagesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Averages"));
-        averagesPanel.setLayout(new java.awt.BorderLayout());
-
-        averagesList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        averagesList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                averagesListValueChanged(evt);
-            }
-        });
-        jScrollPane1.setViewportView(averagesList);
-
-        averagesPanel.add(jScrollPane1, java.awt.BorderLayout.CENTER);
-
-        averagesButtonPanel.setLayout(new javax.swing.BoxLayout(averagesButtonPanel, javax.swing.BoxLayout.LINE_AXIS));
-
-        averageAddButton.setText("Add Average");
-        averageAddButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                averageAddButtonActionPerformed(evt);
-            }
-        });
-        averagesButtonPanel.add(averageAddButton);
-
-        averageDeleteButton.setText("Delete Average");
-        averageDeleteButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                averageDeleteButtonActionPerformed(evt);
-            }
-        });
-        averagesButtonPanel.add(averageDeleteButton);
-
-        averagesPanel.add(averagesButtonPanel, java.awt.BorderLayout.NORTH);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        setupClubPanel.add(averagesPanel, gridBagConstraints);
 
         membersPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Member Information"));
         membersPanel.setLayout(new java.awt.BorderLayout());
@@ -765,7 +719,7 @@ final class MainWindow extends javax.swing.JFrame {
         int index = raceresultsTable.getSelectedRow();
         Race race = season.getRaces().get(index);
         try {
-            Race newRace = RaceSummary.editRace(this, race, season.getOrganization(), configuration, false);
+            Race newRace = RaceSummary.editRace(this, race, season, configuration, false);
             season = editResultsForRace(this.getContentPane(), newRace, season.repReplaceRace(race, newRace), configuration);
         } catch (UserCancelledException e) {
         } catch (ValidationException e) {
@@ -776,7 +730,7 @@ final class MainWindow extends javax.swing.JFrame {
 
     private void raceresultAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_raceresultAddButtonActionPerformed
         try {
-            Race newRace = RaceSummary.createRace(this, season.getOrganization(), configuration);
+            Race newRace = RaceSummary.createRace(this, season, configuration);
             season = editResultsForRace(this.getContentPane(), newRace, season.repAddRace(newRace), configuration);
         } catch (UserCancelledException ex) {
         } catch (ValidationException e) {
@@ -963,7 +917,6 @@ final class MainWindow extends javax.swing.JFrame {
             clubRadioButton.setSelected(season.getOrganization().getType() == Organization.Type.CLUB);
             federationRadioButton.setSelected(season.getOrganization().getType() == Organization.Type.FEDERATION);
 
-            reloadAveragesList();
             reloadMembersList();
             reloadRacepointsList();
             reloadRacesTable();
@@ -996,8 +949,6 @@ final class MainWindow extends javax.swing.JFrame {
         raceresultEditButton.setEnabled( raceresultsTable.getSelectedRow() != -1 );
         raceresultDeleteButton.setEnabled( raceresultsTable.getSelectedRow() != -1 );
         raceresultCalculateResultsButton.setEnabled( raceresultsTable.getSelectedRow() != -1 );
-        
-        averageDeleteButton.setEnabled(averagesList.getSelectedIndex() != -1);
     }
 
     private void refreshMenus(String cardName) {
@@ -1035,29 +986,6 @@ final class MainWindow extends javax.swing.JFrame {
         }
         this.season = season.repSetOrganization(season.getOrganization().repSetType(newType));
     }//GEN-LAST:event_organizationTypeActionPerformed
-
-    private void averageAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_averageAddButtonActionPerformed
-        String average = JOptionPane.showInputDialog(this, "Name for average", "Add average", JOptionPane.QUESTION_MESSAGE,null,null, "").toString();
-        if (average != null) {
-            try {
-                season = season.repSetOrganization(season.getOrganization().repAddAverage(Average.create(average)));
-            } catch (ValidationException e) {
-                e.displayErrorDialog(this);
-            }
-            reloadAveragesList();
-        }
-    }//GEN-LAST:event_averageAddButtonActionPerformed
-
-    private void averageDeleteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_averageDeleteButtonActionPerformed
-        Average average = (Average)averagesList.getSelectedValue();
-        season = season.repSetOrganization(season.getOrganization().repRemoveAverage(average));
-        reloadAveragesList();
-        JOptionPane.showMessageDialog(this, "Averages '" + average + "' deleted.");
-    }//GEN-LAST:event_averageDeleteButtonActionPerformed
-
-    private void averagesListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_averagesListValueChanged
-        refreshButtons();
-    }//GEN-LAST:event_averagesListValueChanged
 
     private static Organization editDistancesForMember(Component parent, Organization organization, Member member) throws UserCancelledException {
         return DistanceEditor.editMemberDistances(parent, member, organization);
@@ -1145,11 +1073,6 @@ final class MainWindow extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JMenuItem aboutItem;
-    private javax.swing.JButton averageAddButton;
-    private javax.swing.JButton averageDeleteButton;
-    private javax.swing.JPanel averagesButtonPanel;
-    private javax.swing.JList averagesList;
-    private javax.swing.JPanel averagesPanel;
     private javax.swing.JMenuItem closeItem;
     private javax.swing.JTextField clubNameText;
     private javax.swing.JRadioButton clubRadioButton;
@@ -1161,7 +1084,6 @@ final class MainWindow extends javax.swing.JFrame {
     private javax.swing.JMenu helpMenu;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JButton loadSeasonButton;
     private javax.swing.JPanel mainMenuPanel;
     private javax.swing.JPanel mainPanel;
@@ -1205,8 +1127,4 @@ final class MainWindow extends javax.swing.JFrame {
     private javax.swing.JMenuItem viewRacepointDistancesItem;
     private javax.swing.JPanel viewingSeason;
     // End of variables declaration//GEN-END:variables
-
-    private void reloadAveragesList() {
-        averagesList.setListData(season.getOrganization().getAverages().toArray());
-    }
 }
