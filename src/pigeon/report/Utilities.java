@@ -127,11 +127,6 @@ public final class Utilities
         return new ArrayList<String>(result);
     }
 
-    public static String stringPrintf(String format, Object... args) {
-        // TODO: inline me!
-        return String.format(format, args);
-    }
-
     static BirdResult calculateVelocity(Organization club, Race race, Clock clock, Time time)
     {
         Date correctedClockTime = clock.convertMemberTimeToMasterTime(new Date(time.getMemberTime()), race);

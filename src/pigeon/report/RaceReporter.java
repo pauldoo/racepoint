@@ -205,7 +205,7 @@ public final class RaceReporter implements Reporter {
                 }
                 if (totalPrizeWonByThisBird > 0) {
                     row.html.append("<td>" + competitionsWonByThisBird + "</td>");
-                    row.html.append("<td class='numeric'>" + Utilities.stringPrintf("%.2f", totalPrizeWonByThisBird) + "</td>");
+                    row.html.append("<td class='numeric'>" + String.format("%.2f", totalPrizeWonByThisBird) + "</td>");
                 } else {
                     row.html.append("<td/>");
                     row.html.append("<td/>");
@@ -213,13 +213,13 @@ public final class RaceReporter implements Reporter {
 
                 if (section != null) {
                     if (prizes != null && pos <= prizes.size() && prizes.get(pos-1) > 0) {
-                        row.html.append("<td class='numeric'>" + Utilities.stringPrintf("%.2f", prizes.get(pos-1)) + "</td>");
+                        row.html.append("<td class='numeric'>" + String.format("%.2f", prizes.get(pos-1)) + "</td>");
                     } else {
                         row.html.append("<td/>");
                     }
                 }
 
-                row.html.append("<td class='numeric'>" + Utilities.stringPrintf("%.3f", row.velocityInMetresPerSecond * Constants.METRES_PER_SECOND_TO_YARDS_PER_MINUTE) + "</td>");
+                row.html.append("<td class='numeric'>" + String.format("%.3f", row.velocityInMetresPerSecond * Constants.METRES_PER_SECOND_TO_YARDS_PER_MINUTE) + "</td>");
 
                 out.print(row.html.toString());
                 out.println("</tr>");
@@ -332,7 +332,7 @@ public final class RaceReporter implements Reporter {
                             if (position <= numberOfWinners.get(c.getName())) {
                                 int entrants = entrantsCount.get(sectionNotNull).get(c.getName());
                                 double prize = c.prize(position, entrants);
-                                row.html.append("<td class='numeric'>" + Utilities.stringPrintf("%.2f", prize) + "</td>");
+                                row.html.append("<td class='numeric'>" + String.format("%.2f", prize) + "</td>");
                                 totalPrizeWonByThisBird += prize;
                                 competitionPositions.put(c.getName(), position);
                                 continue;
@@ -345,7 +345,7 @@ public final class RaceReporter implements Reporter {
                     // If this member has taken a place in any competition, print their line.
                     out.println("<tr>");
                     out.print(row.html.toString());
-                    out.print("<td class='numeric'>" + Utilities.stringPrintf("%.2f", totalPrizeWonByThisBird) + "</td>");
+                    out.print("<td class='numeric'>" + String.format("%.2f", totalPrizeWonByThisBird) + "</td>");
                     out.println("</tr>");
                 }
             }
@@ -364,10 +364,10 @@ public final class RaceReporter implements Reporter {
                         }
                         totalForCompetition.put(c.getName(), totalPrizeGivenForThisCompetition);
                         totalPrizeGivenToEveryone += totalPrizeGivenForThisCompetition;
-                        out.print("<td class='numeric'>" + Utilities.stringPrintf("%.2f", totalPrizeGivenForThisCompetition) + "</td>");
+                        out.print("<td class='numeric'>" + String.format("%.2f", totalPrizeGivenForThisCompetition) + "</td>");
                     }
                 }
-                out.print("<td class='numeric'>" + Utilities.stringPrintf("%.2f", totalPrizeGivenToEveryone) + "</td>");
+                out.print("<td class='numeric'>" + String.format("%.2f", totalPrizeGivenToEveryone) + "</td>");
                 out.println("</tr>");
             }
 
@@ -380,10 +380,10 @@ public final class RaceReporter implements Reporter {
                         int entrants = entrantsCount.get(sectionNotNull).get(c.getName());
                         double unclaimed = c.totalPoolMoney(entrants) - c.totalClubTake(entrants) - totalForCompetition.get(c.getName());
                         totalUnclaimed += unclaimed;
-                        out.print("<td class='numeric'>" + Utilities.stringPrintf("%.2f", unclaimed) + "</td>");
+                        out.print("<td class='numeric'>" + String.format("%.2f", unclaimed) + "</td>");
                     }
                 }
-                out.print("<td class='numeric'>" + Utilities.stringPrintf("%.2f", totalUnclaimed) + "</td>");
+                out.print("<td class='numeric'>" + String.format("%.2f", totalUnclaimed) + "</td>");
                 out.println("</tr>");
             }
 
@@ -396,10 +396,10 @@ public final class RaceReporter implements Reporter {
                         int entrants = entrantsCount.get(sectionNotNull).get(c.getName());
                         double clubTake = c.totalClubTake(entrants);
                         totalClubTake += clubTake;
-                        out.print("<td class='numeric'>" + Utilities.stringPrintf("%.2f", clubTake) + "</td>");
+                        out.print("<td class='numeric'>" + String.format("%.2f", clubTake) + "</td>");
                     }
                 }
-                out.print("<td class='numeric'>" + Utilities.stringPrintf("%.2f", totalClubTake) + "</td>");
+                out.print("<td class='numeric'>" + String.format("%.2f", totalClubTake) + "</td>");
                 out.println("</tr>");
             }
 
@@ -412,10 +412,10 @@ public final class RaceReporter implements Reporter {
                         int entrants = entrantsCount.get(sectionNotNull).get(c.getName());
                         double poolMoney = c.totalPoolMoney(entrants);
                         totalPoolMoney += poolMoney;
-                        out.print("<td class='numeric'>" + Utilities.stringPrintf("%.2f", poolMoney) + "</td>");
+                        out.print("<td class='numeric'>" + String.format("%.2f", poolMoney) + "</td>");
                     }
                 }
-                out.print("<td class='numeric'>" + Utilities.stringPrintf("%.2f", totalPoolMoney) + "</td>");
+                out.print("<td class='numeric'>" + String.format("%.2f", totalPoolMoney) + "</td>");
                 out.println("</tr>");
             }
 
@@ -475,7 +475,7 @@ public final class RaceReporter implements Reporter {
                 return "Club Take";
             }
         }
-        return Utilities.stringPrintf("%.1f%%", clubTakeOfFirstCompetition * 100.0);
+        return String.format("%.1f%%", clubTakeOfFirstCompetition * 100.0);
     }
 
     private boolean listClubNames() {
