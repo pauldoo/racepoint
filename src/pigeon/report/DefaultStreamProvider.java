@@ -27,7 +27,7 @@ import java.util.LinkedList;
 
 public final class DefaultStreamProvider implements StreamProvider
 {
-    private final File outputDirectory;;
+    private final File outputDirectory;
     private final Collection<File> filesToShow = new LinkedList<File>();
     private final Collection<OutputStream> streams = new LinkedList<OutputStream>();
 

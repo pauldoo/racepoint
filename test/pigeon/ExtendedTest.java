@@ -30,8 +30,10 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -55,6 +57,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.ProcessingInstruction;
 import org.xml.sax.SAXException;
 import pigeon.competitions.Competition;
+import pigeon.model.Average;
 import pigeon.model.Clock;
 import pigeon.model.Constants;
 import pigeon.model.Distance;
@@ -251,6 +254,11 @@ public final class ExtendedTest extends TestCase
 
             season = season.repAddRace(race);
         }
+        
+        final Set<Average> averages = Collections.unmodifiableSet(new HashSet<Average>(Arrays.asList(Average.create("hello"))));
+        for (Race oldRace: season.getRaces()) {
+            season = season.repReplaceRace(oldRace, oldRace.repSetAverages(averages));
+        }
     }
 
     private Organization createOraganization() throws ValidationException
@@ -397,7 +405,7 @@ public final class ExtendedTest extends TestCase
     public void testRaceReports() throws IOException
     {
         for (Race race: season.getRaces()) {
-            RaceReporter reporter = new RaceReporter(season.getOrganization(), race, configuration.getCompetitions(), configuration.getResultsFooter());
+            RaceReporter reporter = new RaceReporter(season, race, configuration.getCompetitions(), configuration.getResultsFooter());
             RegressionStreamProvider streamProvider = new RegressionStreamProvider();
             reporter.write(streamProvider);
 
@@ -408,13 +416,25 @@ public final class ExtendedTest extends TestCase
     public void testPoolReports() throws IOException
     {
         for (Race race: season.getRaces()) {
-            RaceReporter reporter = new RaceReporter(season.getOrganization(), race, configuration.getCompetitions(), configuration.getResultsFooter());
+            RaceReporter reporter = new RaceReporter(season, race, configuration.getCompetitions(), configuration.getResultsFooter());
             RegressionStreamProvider streamProvider = new RegressionStreamProvider();
             reporter.write(streamProvider);
 
             checkRegression(streamProvider.getBytes("Pools.html"), "Pools_" + race.getRacepoint());
         }
     }
+    
+    public void testAveragesReports() throws IOException
+    {
+        Season clubSeason = season.repSetOrganization(season.getOrganization().repSetType(Organization.Type.CLUB));
+        for (Race race: clubSeason.getRaces()) {
+            RaceReporter reporter = new RaceReporter(clubSeason, race, configuration.getCompetitions(), configuration.getResultsFooter());
+            RegressionStreamProvider streamProvider = new RegressionStreamProvider();
+            reporter.write(streamProvider);
+
+            checkRegression(streamProvider.getBytes("Averages.html"), "Averages_" + race.getRacepoint());
+        }
+    }    
 
     public void testMembersReport() throws IOException
     {

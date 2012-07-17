@@ -650,7 +650,7 @@ final class MainWindow extends javax.swing.JFrame {
     private void raceresultCalculateResultsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_raceresultCalculateResultsButtonActionPerformed
         int index = raceresultsTable.getSelectedRow();
         Race race = season.getRaces().get(index);
-        writeReport(new RaceReporter(season.getOrganization(), race, configuration.getCompetitions(), configuration.getResultsFooter()));
+        writeReport(new RaceReporter(season, race, configuration.getCompetitions(), configuration.getResultsFooter()));
     }//GEN-LAST:event_raceresultCalculateResultsButtonActionPerformed
 
     private void clubNameTextFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_clubNameTextFocusLost

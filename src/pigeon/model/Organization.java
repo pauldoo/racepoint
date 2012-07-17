@@ -170,7 +170,9 @@ public final class Organization implements Serializable
                 return stored;
             }
         }
-        throw new IllegalArgumentException("Member / Racepoint doesn't exist");
+
+        throw new IllegalArgumentException(String.format(
+            "No distance found for member (%s) or racepoint (%s).", member.toString(), racepoint.toString()));
     }
 
     public Distance getDistance(Member member, Racepoint racepoint) {

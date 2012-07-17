@@ -17,7 +17,4 @@ Update unit tests for averages.
 
     Including regression extended test.
 
-Remove List of Averages from the Organisation model.
-
-    Check if this is ok behaviour first..
-
+Revisit which bits of functionality are needed for club vs fed.

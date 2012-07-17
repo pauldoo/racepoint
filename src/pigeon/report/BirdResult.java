@@ -31,14 +31,16 @@ final class BirdResult implements Comparable<BirdResult>
     public final Time time;
     public final Date correctedClockTime;
     public final Distance distance;
+    public final double flyTimeInSeconds;
     public final StringBuffer html = new StringBuffer();
 
-    public BirdResult(double velocityInMetresPerSecond, Time time, Date correctedClockTime, Distance distance)
+    public BirdResult(Time time, Date correctedClockTime, Distance distance, double flyTimeInSeconds)
     {
-        this.velocityInMetresPerSecond = velocityInMetresPerSecond;
+        this.velocityInMetresPerSecond = distance.getMetres() / flyTimeInSeconds;
         this.time = time;
         this.correctedClockTime = correctedClockTime;
         this.distance = distance;
+        this.flyTimeInSeconds = flyTimeInSeconds;
     }
 
     public boolean equals(Object rhs)
@@ -51,6 +53,7 @@ final class BirdResult implements Comparable<BirdResult>
         return compareTo(rhs) == 0;
     }
 
+    // Descending velocity order
     public int compareTo(BirdResult rhs)
     {
         final BirdResult lhs = this;

@@ -208,9 +208,9 @@ public final class Utilities {
     /**
         Returns a list of all the averages mentioned across all races.
     */
-    public static SortedSet<Average> getAverages(Season season) {
+    public static SortedSet<Average> getAverages(Iterable<Race> races) {
         SortedSet<Average> result = new TreeSet<Average>();
-        for (Race r: season.getRaces()) {
+        for (Race r: races) {
             result.addAll(r.getAverages());
         }
         return Collections.unmodifiableSortedSet(result);

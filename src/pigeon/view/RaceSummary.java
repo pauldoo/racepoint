@@ -202,7 +202,7 @@ final class RaceSummary extends javax.swing.JPanel {
         populatePrizesPanel(prizesPanel, prizeFields, club);
         
         {
-            final SortedSet<Average> available = Utilities.getAverages(season);
+            final SortedSet<Average> available = Utilities.getAverages(season.getRaces());
             final Set<Average> selected = race.getAverages();
             averagesMultipleCheckBoxesPanel = new MultipleCheckBoxesPanel<Average>(available, selected, new AveragesCreator());
             averagesPanel.add(averagesMultipleCheckBoxesPanel);
