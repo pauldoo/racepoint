@@ -28,7 +28,7 @@ import pigeon.report.StreamProvider;
 
 final class RegressionStreamProvider implements StreamProvider
 {
-    final SortedMap<String, ByteArrayOutputStream> streams = new TreeMap<String, ByteArrayOutputStream>();
+    private final SortedMap<String, ByteArrayOutputStream> streams = new TreeMap<String, ByteArrayOutputStream>();
 
     @Override
     public OutputStream createNewStream(String filename, boolean showToUser) throws IOException {

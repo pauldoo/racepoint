@@ -49,9 +49,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.ProcessingInstruction;
@@ -78,7 +76,7 @@ import pigeon.view.Utilities;
 /**
     Some extended regression based tests for the app.
 */
-public final class ExtendedTest extends TestCase
+public abstract class RegressionTestBase extends TestCase
 {
     private static final boolean UPDATE_OK_FILES = false;
 
@@ -91,15 +89,8 @@ public final class ExtendedTest extends TestCase
     static final int BIRDS_PER_MEMBER = 19;
     static final int MEMBER_COUNT = 23;
 
-    public ExtendedTest(String testName) {
+    protected RegressionTestBase(String testName) {
         super(testName);
-    }
-
-    public static Test suite()
-    {
-        TestSuite suite = new TestSuite(ExtendedTest.class);
-
-        return suite;
     }
 
     @Override
@@ -263,8 +254,7 @@ public final class ExtendedTest extends TestCase
 
     private Organization createOraganization() throws ValidationException
     {
-        Organization org = Organization.createEmpty();
-        org = org.repSetName("Test fed");
+        Organization org = createNamedOrganisation();
 
         final String[][] clubs = new String[CLUB_COUNT][];
         for (int i = 0; i < CLUB_COUNT; i++) {
@@ -306,6 +296,8 @@ public final class ExtendedTest extends TestCase
         return org;
     }
 
+    protected abstract Organization createNamedOrganisation() throws ValidationException;
+
     @Override
     protected void tearDown()
     {
@@ -313,8 +305,8 @@ public final class ExtendedTest extends TestCase
 
     private void checkRegression(final byte[] tmpData, String name) throws IOException
     {
-        final File tmpFile = new File("regression/" + name + (UPDATE_OK_FILES ? ".ok" : ".tmp"));
-        final File okFile = new File("regression/" + name + ".ok");
+        final File tmpFile = new File("regression/" + getPrefix() + name + (UPDATE_OK_FILES ? ".ok" : ".tmp"));
+        final File okFile = new File("regression/" + getPrefix() + name + ".ok");
 
         OutputStream tmpOut = new FileOutputStream(tmpFile);
         try {
@@ -349,7 +341,7 @@ public final class ExtendedTest extends TestCase
 
         OutputStream pcsOut = null;
         try {
-            pcsOut = new GZIPOutputStream(new BufferedOutputStream(new FileOutputStream("regression/Serialization.pcs")));
+            pcsOut = new GZIPOutputStream(new BufferedOutputStream(new FileOutputStream("regression/" + getPrefix() + "Serialization.pcs")));
             pcsOut.write(savedOnce);
         } finally {
             if (pcsOut != null) {
@@ -426,13 +418,18 @@ public final class ExtendedTest extends TestCase
     
     public void testAveragesReports() throws IOException
     {
-        Season clubSeason = season.repSetOrganization(season.getOrganization().repSetType(Organization.Type.CLUB));
-        for (Race race: clubSeason.getRaces()) {
-            RaceReporter reporter = new RaceReporter(clubSeason, race, configuration.getCompetitions(), configuration.getResultsFooter());
+        final boolean isClub = season.getOrganization().getType() == Organization.Type.CLUB;
+
+        for (Race race: season.getRaces()) {
+            RaceReporter reporter = new RaceReporter(season, race, configuration.getCompetitions(), configuration.getResultsFooter());
             RegressionStreamProvider streamProvider = new RegressionStreamProvider();
             reporter.write(streamProvider);
 
-            checkRegression(streamProvider.getBytes("Averages.html"), "Averages_" + race.getRacepoint());
+            assertEquals(isClub, streamProvider.getFilenames().contains("Averages.html"));
+            
+            if (isClub) {
+                checkRegression(streamProvider.getBytes("Averages.html"), "Averages_" + race.getRacepoint());
+            }
         }
     }    
 
@@ -506,4 +503,6 @@ public final class ExtendedTest extends TestCase
             throw new IOException(e);
         }
     }
+
+    protected abstract String getPrefix();
 }
