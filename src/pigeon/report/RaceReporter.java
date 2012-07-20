@@ -78,6 +78,7 @@ public final class RaceReporter implements Reporter {
         }
     }
 
+
     private void writeRaceReport(final OutputStream raceReportStream) throws IOException {
         String raceDate = pigeon.view.Utilities.DATE_FORMAT.format(race.getLiberationDate());
         String raceTime = pigeon.view.Utilities.TIME_FORMAT_WITH_LOCALE.format(race.getLiberationDate());
@@ -440,9 +441,7 @@ public final class RaceReporter implements Reporter {
 
         SortedSet<Average> averages = pigeon.view.Utilities.getAverages(season.getRaces());
         for (Average avg: averages) {
-            Collection<Race> relevantRaces = relevantRaces(season.getRaces(), avg);
-            Collection<Member> survivingMembers = completedAllRaces(relevantRaces);
-            SortedSet<AverageResult> averagesResult = averageResults(season.getOrganization(), relevantRaces, survivingMembers);
+            SortedSet<AverageResult> averagesResult = Averages.resultsForAverage(avg, season);
             for (AverageResult r: averagesResult) {
                 String foo = String.format("<p>For average '%s', member '%s', has avg velocity '%f' m/s.</p>", 
                         avg.name,
@@ -488,71 +487,4 @@ public final class RaceReporter implements Reporter {
                 throw new IllegalArgumentException();
         }
     }
-
-    private static Collection<Race> relevantRaces(List<Race> races, Average avg) {
-        List<Race> result = new ArrayList<Race>();
-        for (Race r: races) {
-            if (r.getAverages().contains(avg)) {
-                result.add(r);
-            }
-        }
-        return Collections.unmodifiableList(result);
-    }
-
-    private static Collection<Member> completedAllRaces(Collection<Race> races) {
-        Set<Member> result = null;
-        for (Race r: races) {
-            Set<Member> membersWhoCompleted = membersWhoCompleted(r);
-            if (result == null) {
-                result = new HashSet<Member>(membersWhoCompleted);
-            } else {
-                result.retainAll(membersWhoCompleted);
-            }
-        }
-        return Collections.unmodifiableSet(result);
-    }
-
-    private static Set<Member> membersWhoCompleted(Race r) {
-        Set<Member> result = new HashSet<Member>();
-        for (Clock c: r.getClocks()) {
-            if (c.getTimes().isEmpty() == false) {
-                result.add(c.getMember());
-            }
-        }
-        return Collections.unmodifiableSet(result);
-    }
-
-    private static SortedSet<AverageResult> averageResults(Organization club, Collection<Race> relevantRaces, Collection<Member> members) {
-        SortedSet<AverageResult> allResults = new TreeSet<AverageResult>();
-        for (Member m: members) {
-            AverageResult result = AverageResult.createEmpty(m);
-            for (Race r: relevantRaces) {
-                result = result.repAccumulate(bestBirdInRaceForMember(r, m, club));
-            }
-            allResults.add(result);
-        }
-        return Collections.unmodifiableSortedSet(allResults);
-    }
-    
-    private static BirdResult bestBirdInRaceForMember(Race r, Member m, Organization club) {
-        BirdResult result = null;
-        for (Clock c: r.getClocks()) {
-            if (c.getMember().equals(m)) {
-                for (Time t: c.getTimes()) {
-                    BirdResult br = Utilities.calculateVelocity(club, r, c, t);
-                    if (result == null ||
-                            br.compareTo(result) < 0) {
-                        result = br;
-                    }
-                }
-            }
-        }
-        
-        if (result != null) {
-            return result;
-        } else {
-            throw new IllegalArgumentException("Member did not have a finishing bird in this race");
-        }
-    }
-
 }

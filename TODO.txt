@@ -18,3 +18,5 @@ Update unit tests for averages.
     Including regression extended test.
 
 Revisit which bits of functionality are needed for club vs fed.
+
+Migrate tests to JUnit 4.
