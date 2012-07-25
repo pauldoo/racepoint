@@ -20,3 +20,5 @@ Update unit tests for averages.
 Revisit which bits of functionality are needed for club vs fed.
 
 Migrate tests to JUnit 4.
+
+HTML escape report outputs.

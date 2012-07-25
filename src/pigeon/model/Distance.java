@@ -29,7 +29,11 @@ public final class Distance implements Serializable, Comparable<Distance> {
     private final double distanceInMetres;
 
     private Distance(double metres) {
-        this.distanceInMetres = metres;
+        if (0.0 <= metres) {
+            this.distanceInMetres = metres;
+        } else {
+            throw new IllegalArgumentException("Distances must be non-negative.");
+        }
     }
 
     public static Distance createFromMetric(double metres) {
@@ -51,11 +55,11 @@ public final class Distance implements Serializable, Comparable<Distance> {
     }
 
     public int getMiles() {
-        return (int)Math.round(getYards()) / Constants.YARDS_PER_MILE;
+        return (int)(Math.round(getYards()) / Constants.YARDS_PER_MILE);
     }
 
     public int getYardsRemainder() {
-        return (int)Math.round(getYards()) % Constants.YARDS_PER_MILE;
+        return (int)(Math.round(getYards()) % Constants.YARDS_PER_MILE);
     }
 
     @Override

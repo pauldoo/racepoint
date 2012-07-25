@@ -439,17 +439,30 @@ public final class RaceReporter implements Reporter {
         String raceTime = pigeon.view.Utilities.TIME_FORMAT_WITH_LOCALE.format(race.getLiberationDate());
         PrintStream out = Utilities.writeHtmlHeader(stream, race.getRacepoint().toString() + " on " + raceDate);
 
+        out.println("<div class=\"outer last\">");
+        out.println("<h1>" + season.getOrganization().getName() + "</h1>");
+        out.println("<h2>Race from " + race.getRacepoint().toString() + "</h2>");
+        out.println("<h3>Liberated at " + raceTime + " on " + raceDate + " in a " + race.getWindDirection() + " wind</h3>");
+        
         SortedSet<Average> averages = pigeon.view.Utilities.getAverages(season.getRaces());
         for (Average avg: averages) {
+            out.println("<h3>" + avg.name + "</h3>");
+            out.println("<table>");
+            out.println("<tr><th>Member</th><th>Miles</th><th>Yards</th><th>Time</th><th>Average</th></tr>");
             SortedSet<AverageResult> averagesResult = Averages.resultsForAverage(avg, season);
             for (AverageResult r: averagesResult) {
-                String foo = String.format("<p>For average '%s', member '%s', has avg velocity '%f' m/s.</p>", 
-                        avg.name,
-                        r.member.getName(),
-                        r.averageVelocityInMetresPerSecond());
-                out.println(foo);
+                out.print("<tr>");
+                out.print("<td>" + r.member.getName() + "</td>");
+                out.print("<td>" + r.totalDistance.getMiles() + "</td>");
+                out.print("<td>" + r.totalDistance.getYardsRemainder() + "</td>");
+                out.print("<td>" + formatTimespan(r.totalTimeInSeconds) + "</td>");
+                out.print("<td class='numeric'>" + String.format("%.3f", r.averageVelocityInMetresPerSecond() * Constants.METRES_PER_SECOND_TO_YARDS_PER_MINUTE) + "</td>");
+                out.print("</tr>");
+                out.println();
             }
+            out.println("</table>");
         }
+        out.println("</div>");
         
         if (resultsFooter != null) {
             out.println("<h4>" + resultsFooter + "</h4>");
@@ -486,5 +499,13 @@ public final class RaceReporter implements Reporter {
             default:
                 throw new IllegalArgumentException();
         }
+    }
+
+    private static String formatTimespan(double totalTimeInSeconds) {
+        final int seconds = (int)Math.round(totalTimeInSeconds);
+        return String.format("%d:%02d:%02d",
+                seconds / (60 * 60),
+                (seconds / 60) % 60,
+                seconds % 60);
     }
 }

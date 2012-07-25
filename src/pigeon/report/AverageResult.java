@@ -15,26 +15,27 @@
 */
 package pigeon.report;
 
+import pigeon.model.Distance;
 import pigeon.model.Member;
 
 final class AverageResult implements Comparable<AverageResult> {
-    public final double totalDistanceInMetres;
+    public final Distance totalDistance;
     public final double totalTimeInSeconds;
     public final Member member;
 
-    private AverageResult(double totalDistanceInMetres, double totalTimeInSeconds, Member member) {
-        this.totalDistanceInMetres = totalDistanceInMetres;
+    private AverageResult(Distance totalDistance, double totalTimeInSeconds, Member member) {
+        this.totalDistance = totalDistance;
         this.totalTimeInSeconds = totalTimeInSeconds;
         this.member = member;
     }
     
     public static AverageResult createEmpty(final Member member) {
-        return new AverageResult(0.0, 0.0, member);
+        return new AverageResult(Distance.createFromMetric(0.0), 0.0, member);
     }
     
     public AverageResult repAccumulate(final BirdResult raceResult) {
         return new AverageResult(
-                totalDistanceInMetres + raceResult.distance.getMetres(),
+                Distance.createFromMetric(totalDistance.getMetres() + raceResult.distance.getMetres()),
                 totalTimeInSeconds + raceResult.flyTimeInSeconds,
                 member);
     }
@@ -60,6 +61,6 @@ final class AverageResult implements Comparable<AverageResult> {
     }
     
     public double averageVelocityInMetresPerSecond() {
-        return totalDistanceInMetres / totalTimeInSeconds;
+        return totalDistance.getMetres() / totalTimeInSeconds;
     }
 }
