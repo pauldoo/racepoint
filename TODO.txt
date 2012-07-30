@@ -1,15 +1,9 @@
-Add support for points and averages.
+Only generate averages report on request, not on every race.
 
-    Averages, print off seperately.
+Make it clear which season is being edited:
+    Add date of season to window or titlebar?
 
-    Configurable list of competitions.
-
-    Total dist / total time (not avg of averages).
-
-    Per member, taking best bird in each race (so overall average will
-    cover several different birds).
-
-    Each race may count towards 0 or more competitions.
+Change to use '-' character instead of ':' when entering times/dates.
 
 Drop getters for read-only fields in model files.
 
