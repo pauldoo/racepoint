@@ -5,6 +5,12 @@ Make it clear which season is being edited:
 
 Change to use '-' character instead of ':' when entering times/dates.
 
+Bug: Doesn't show members in list correctly "Joe Blogs, ,"
+
+Bug: Edit racepoint, click cancel -> NPE
+
+Adding averages, panel doesn't repaint after adding (only winxp?)..
+
 Drop getters for read-only fields in model files.
 
 Update unit tests for averages.
@@ -16,3 +22,4 @@ Revisit which bits of functionality are needed for club vs fed.
 Migrate tests to JUnit 4.
 
 HTML escape report outputs.
+
