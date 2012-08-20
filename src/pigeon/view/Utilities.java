@@ -387,4 +387,8 @@ public final class Utilities {
             return copy.get(index);
         }
     }
+    
+    static String toStringOrNull(Object object) {
+        return (object == null) ? null : (object.toString());
+    }
 }

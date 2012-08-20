@@ -858,7 +858,7 @@ final class MainWindow extends javax.swing.JFrame {
     private void racepointEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_racepointEditButtonActionPerformed
         int index = racepointsList.getSelectedIndex();
         Racepoint racepoint = season.getOrganization().getRacepoints().get(index);
-        String name = JOptionPane.showInputDialog(this, "Please enter a new name for \"" + racepoint + "\"", "Edit racepoint name", JOptionPane.QUESTION_MESSAGE,null,null, racepoint.toString()).toString();
+        String name = Utilities.toStringOrNull(JOptionPane.showInputDialog(this, "Please enter a new name for \"" + racepoint + "\"", "Edit racepoint name", JOptionPane.QUESTION_MESSAGE,null,null, racepoint.toString()));
         if (name != null) {
             try {
                 Racepoint newRacepoint = racepoint.repSetName(name);
