@@ -23,6 +23,7 @@ import java.util.Set;
 import java.util.SortedSet;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 import pigeon.model.ValidationException;
 
 /**
@@ -58,6 +59,8 @@ public class MultipleCheckBoxesPanel<T extends Comparable<T>> extends javax.swin
         JCheckBox box = new JCheckBox(t.toString());
         checkBoxes.put(t, box);
         checkBoxPanel.add(box);
+        // TODO: Repainting needed for WinXP + Java 1.7.0_05 (others too?)
+        checkBoxPanel.revalidate();
         return box;
     }
 

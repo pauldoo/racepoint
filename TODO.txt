@@ -7,8 +7,6 @@ Change to use '-' character instead of ':' when entering times/dates.
 
 Bug: Doesn't show members in list correctly "Joe Blogs, ,"
 
-Adding averages, panel doesn't repaint after adding (only winxp?)..
-
 Drop getters for read-only fields in model files.
 
 Update unit tests for averages.
