@@ -5,7 +5,7 @@ Make it clear which season is being edited:
 
 Change to use '-' character instead of ':' when entering times/dates.
 
-Bug: Doesn't show members in list correctly "Joe Blogs, ,"
+Converting between fed and club modes leaves the member data messy.
 
 Drop getters for read-only fields in model files.
 
