@@ -160,8 +160,6 @@ final class MainWindow extends javax.swing.JFrame {
         raceresultCalculateResultsButton = new javax.swing.JButton();
         raceresultCalculateAveragesButton = new javax.swing.JButton();
         seasonNameLabel = new javax.swing.JLabel();
-        statusBarPanel = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         openItem = new javax.swing.JMenuItem();
@@ -480,13 +478,6 @@ final class MainWindow extends javax.swing.JFrame {
         mainPanel.add(viewingSeason, "viewingSeason");
 
         getContentPane().add(mainPanel, java.awt.BorderLayout.CENTER);
-
-        statusBarPanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
-
-        jLabel2.setText("This version of RacePoint is for testing only.");
-        statusBarPanel.add(jLabel2);
-
-        getContentPane().add(statusBarPanel, java.awt.BorderLayout.SOUTH);
 
         fileMenu.setText("File");
 
@@ -1122,7 +1113,6 @@ final class MainWindow extends javax.swing.JFrame {
     private javax.swing.JMenu fileMenu;
     private javax.swing.JButton finishedButton;
     private javax.swing.JMenu helpMenu;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JButton loadSeasonButton;
     private javax.swing.JPanel mainMenuPanel;
     private javax.swing.JPanel mainPanel;
@@ -1162,7 +1152,6 @@ final class MainWindow extends javax.swing.JFrame {
     private javax.swing.JLabel seasonNameLabel;
     private javax.swing.JMenuItem setupClubItem;
     private javax.swing.JPanel setupClubPanel;
-    private javax.swing.JPanel statusBarPanel;
     private javax.swing.JMenuItem viewMemberDistancesItem;
     private javax.swing.JMenuItem viewMembersItem;
     private javax.swing.JMenuItem viewRacepointDistancesItem;
