@@ -47,6 +47,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 import pigeon.competitions.Competition;
+import pigeon.model.Average;
 import pigeon.model.Clock;
 import pigeon.model.Member;
 import pigeon.model.Organization;
@@ -202,6 +203,17 @@ public final class Utilities {
             result.add(c.getName());
         }
         return Collections.unmodifiableList(result);
+    }
+    
+    /**
+        Returns a list of all the averages mentioned across all races.
+    */
+    public static SortedSet<Average> getAverages(Iterable<Race> races) {
+        SortedSet<Average> result = new TreeSet<Average>();
+        for (Race r: races) {
+            result.addAll(r.getAverages());
+        }
+        return Collections.unmodifiableSortedSet(result);
     }
 
     /**
@@ -374,5 +386,9 @@ public final class Utilities {
             int index = (copy.size()-1) / 2;
             return copy.get(index);
         }
+    }
+    
+    static String toStringOrNull(Object object) {
+        return (object == null) ? null : (object.toString());
     }
 }

@@ -127,14 +127,6 @@ public final class Utilities
         return new ArrayList<String>(result);
     }
 
-    public static String stringPrintf(String format, Object... args) {
-            StringWriter buffer = new StringWriter();
-            PrintWriter writer = new PrintWriter(buffer);
-            writer.printf(format, args);
-            writer.flush();
-            return buffer.toString();
-    }
-
     static BirdResult calculateVelocity(Organization club, Race race, Clock clock, Time time)
     {
         Date correctedClockTime = clock.convertMemberTimeToMasterTime(new Date(time.getMemberTime()), race);
@@ -142,9 +134,8 @@ public final class Utilities
         long timeSpentSleeping = nightsSpentSleeping * race.getLengthOfDarknessEachNight();
         double flyTimeInSeconds = (correctedClockTime.getTime() - race.getLiberationDate().getTime() - timeSpentSleeping) / 1000.0;
         Distance distance = club.getDistanceEntry(clock.getMember(), race.getRacepoint()).getDistance();
-        double velocityInMetresPerSecond = distance.getMetres() / flyTimeInSeconds;
 
-        return new BirdResult(velocityInMetresPerSecond, time, correctedClockTime, distance);
+        return new BirdResult(time, correctedClockTime, distance, flyTimeInSeconds);
     }
 
     /**
@@ -238,5 +229,5 @@ public final class Utilities
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
+    }    
 }

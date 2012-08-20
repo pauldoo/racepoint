@@ -50,7 +50,7 @@ public final class Organization implements Serializable
             List<Racepoint> racepoints,
             List<DistanceEntry> distances) {
         this.name = name;
-        this.type = defaultIfNull(type);
+        this.type = Utilities.defaultIfNull(type, Type.FEDERATION);
         this.members = Utilities.unmodifiableSortedListCopy(members);
         this.racepoints = Utilities.unmodifiableSortedListCopy(racepoints);
         this.distances = Utilities.unmodifiableSortedListCopy(distances);
@@ -79,7 +79,7 @@ public final class Organization implements Serializable
     }
     
     public Type getType() {
-        return defaultIfNull(type);
+        return Utilities.defaultIfNull(type, Type.FEDERATION);
     }
     
     public Organization repSetType(Type type) {
@@ -170,7 +170,9 @@ public final class Organization implements Serializable
                 return stored;
             }
         }
-        throw new IllegalArgumentException("Member / Racepoint doesn't exist");
+
+        throw new IllegalArgumentException(String.format(
+            "No distance found for member (%s) or racepoint (%s).", member.toString(), racepoint.toString()));
     }
 
     public Distance getDistance(Member member, Racepoint racepoint) {
@@ -217,9 +219,5 @@ public final class Organization implements Serializable
             result = result.repSetDistance(newMember, e.getKey(), e.getValue());
         }
         return result;
-    }
-
-    private static Type defaultIfNull(Type type) {
-        return (type == null) ? Type.FEDERATION : type;
     }
 }

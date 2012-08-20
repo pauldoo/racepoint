@@ -30,8 +30,10 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -47,14 +49,13 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
-import junit.framework.Test;
 import junit.framework.TestCase;
-import junit.framework.TestSuite;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.ProcessingInstruction;
 import org.xml.sax.SAXException;
 import pigeon.competitions.Competition;
+import pigeon.model.Average;
 import pigeon.model.Clock;
 import pigeon.model.Constants;
 import pigeon.model.Distance;
@@ -66,6 +67,7 @@ import pigeon.model.Season;
 import pigeon.model.Sex;
 import pigeon.model.Time;
 import pigeon.model.ValidationException;
+import pigeon.report.AveragesReporter;
 import pigeon.report.DistanceReporter;
 import pigeon.report.MembersReporter;
 import pigeon.report.RaceReporter;
@@ -75,7 +77,7 @@ import pigeon.view.Utilities;
 /**
     Some extended regression based tests for the app.
 */
-public final class ExtendedTest extends TestCase
+public abstract class RegressionTestBase extends TestCase
 {
     private static final boolean UPDATE_OK_FILES = false;
 
@@ -88,15 +90,8 @@ public final class ExtendedTest extends TestCase
     static final int BIRDS_PER_MEMBER = 19;
     static final int MEMBER_COUNT = 23;
 
-    public ExtendedTest(String testName) {
+    protected RegressionTestBase(String testName) {
         super(testName);
-    }
-
-    public static Test suite()
-    {
-        TestSuite suite = new TestSuite(ExtendedTest.class);
-
-        return suite;
     }
 
     @Override
@@ -251,12 +246,16 @@ public final class ExtendedTest extends TestCase
 
             season = season.repAddRace(race);
         }
+        
+        final Set<Average> averages = Collections.unmodifiableSet(new HashSet<Average>(Arrays.asList(Average.create("hello"))));
+        for (Race oldRace: season.getRaces()) {
+            season = season.repReplaceRace(oldRace, oldRace.repSetAverages(averages));
+        }
     }
 
     private Organization createOraganization() throws ValidationException
     {
-        Organization org = Organization.createEmpty();
-        org = org.repSetName("Test fed");
+        Organization org = createNamedOrganisation();
 
         final String[][] clubs = new String[CLUB_COUNT][];
         for (int i = 0; i < CLUB_COUNT; i++) {
@@ -298,15 +297,17 @@ public final class ExtendedTest extends TestCase
         return org;
     }
 
+    protected abstract Organization createNamedOrganisation() throws ValidationException;
+
     @Override
     protected void tearDown()
     {
     }
 
-    private void checkRegression(final byte[] tmpData, String name) throws IOException
+    protected void checkRegression(final byte[] tmpData, String name) throws IOException
     {
-        final File tmpFile = new File("regression/" + name + (UPDATE_OK_FILES ? ".ok" : ".tmp"));
-        final File okFile = new File("regression/" + name + ".ok");
+        final File tmpFile = new File("regression/" + getPrefix() + name + (UPDATE_OK_FILES ? ".ok" : ".tmp"));
+        final File okFile = new File("regression/" + getPrefix() + name + ".ok");
 
         OutputStream tmpOut = new FileOutputStream(tmpFile);
         try {
@@ -341,7 +342,7 @@ public final class ExtendedTest extends TestCase
 
         OutputStream pcsOut = null;
         try {
-            pcsOut = new GZIPOutputStream(new BufferedOutputStream(new FileOutputStream("regression/Serialization.pcs")));
+            pcsOut = new GZIPOutputStream(new BufferedOutputStream(new FileOutputStream("regression/" + getPrefix() + "Serialization.pcs")));
             pcsOut.write(savedOnce);
         } finally {
             if (pcsOut != null) {
@@ -397,7 +398,7 @@ public final class ExtendedTest extends TestCase
     public void testRaceReports() throws IOException
     {
         for (Race race: season.getRaces()) {
-            RaceReporter reporter = new RaceReporter(season.getOrganization(), race, configuration.getCompetitions(), configuration.getResultsFooter());
+            RaceReporter reporter = new RaceReporter(season, race, configuration.getCompetitions(), configuration.getResultsFooter());
             RegressionStreamProvider streamProvider = new RegressionStreamProvider();
             reporter.write(streamProvider);
 
@@ -408,7 +409,7 @@ public final class ExtendedTest extends TestCase
     public void testPoolReports() throws IOException
     {
         for (Race race: season.getRaces()) {
-            RaceReporter reporter = new RaceReporter(season.getOrganization(), race, configuration.getCompetitions(), configuration.getResultsFooter());
+            RaceReporter reporter = new RaceReporter(season, race, configuration.getCompetitions(), configuration.getResultsFooter());
             RegressionStreamProvider streamProvider = new RegressionStreamProvider();
             reporter.write(streamProvider);
 
@@ -486,4 +487,6 @@ public final class ExtendedTest extends TestCase
             throw new IOException(e);
         }
     }
+
+    protected abstract String getPrefix();
 }

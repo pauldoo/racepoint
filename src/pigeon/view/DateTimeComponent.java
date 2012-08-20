@@ -64,7 +64,26 @@ public final class DateTimeComponent extends javax.swing.JPanel
     */
     public String getFormatPattern()
     {
-        return getMode().getFormat().toPattern();
+        StringBuilder result = new StringBuilder();
+        String[] options = messUp(getMode().getFormat().toPattern());
+        for (int i = 0; i < options.length; i++) {
+            if (i > 0) {
+                result.append(" or ");
+            }
+            result.append(options[i]);
+        }
+        return result.toString();
+    }
+
+    public static String tidyUp(String string) {
+        return string.trim().replace('-', ':');
+    }
+
+    public static String[] messUp(String string) {
+        return new String[] {
+            string, 
+            string.replace(':', '-')
+        };
     }
 
     private static final class CustomLenientDateFormatter extends DateFormatter
@@ -77,7 +96,7 @@ public final class DateTimeComponent extends javax.swing.JPanel
 
         @Override
         public Object stringToValue(String string) throws ParseException {
-            return super.stringToValue(string.trim().replace('-', ':'));
+            return super.stringToValue(tidyUp(string));
         }
     }
 

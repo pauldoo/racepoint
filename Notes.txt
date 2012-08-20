@@ -1,6 +1,6 @@
 I am attempting to write some software useful for pigeon racers. The "official"
-webpage is at http://pauldoo.com/racepoint/, this page simply contains some
-notes.
+webpage is at http://pauldoo.com/racepoint/. This page simply contains some
+developer notes on how some older software operated.
 
 [[PageOutline]]
 
