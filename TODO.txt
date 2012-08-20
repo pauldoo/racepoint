@@ -1,6 +1,3 @@
-Make it clear which season is being edited:
-    Add date of season to window or titlebar?
-
 Converting between fed and club modes leaves the member data messy.
 
 Drop getters for read-only fields in model files.

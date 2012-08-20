@@ -550,9 +550,9 @@
                     </Component>
                   </SubComponents>
                 </Container>
-                <Component class="javax.swing.JLabel" name="jLabel1">
+                <Component class="javax.swing.JLabel" name="seasonNameLabel">
                   <Properties>
-                    <Property name="text" type="java.lang.String" value="Add races to the season below."/>
+                    <Property name="text" type="java.lang.String" value="Season name goes here.."/>
                   </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout" value="org.netbeans.modules.form.compat2.layouts.DesignBorderLayout$BorderConstraintsDescription">

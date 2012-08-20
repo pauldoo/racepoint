@@ -24,6 +24,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import javax.imageio.ImageIO;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
@@ -100,6 +102,16 @@ final class MainWindow extends javax.swing.JFrame {
     private boolean modeIs(Organization.Type mode) {
         return season != null && season.getOrganization().getType() == mode;
     }
+    
+    private String currentSeasonText() {
+        if (season != null && season.getRaces().isEmpty() == false) {
+            Race anyRace = season.getRaces().get(0);
+            String yearAsString = new SimpleDateFormat("yyyy").format(anyRace.getLiberationDate());
+            return yearAsString + " season";
+        } else {
+            return "New season";
+        }
+    }
 
     /** This method is called from within the constructor to
      * initialize the form.
@@ -147,7 +159,7 @@ final class MainWindow extends javax.swing.JFrame {
         raceresultDeleteButton = new javax.swing.JButton();
         raceresultCalculateResultsButton = new javax.swing.JButton();
         raceresultCalculateAveragesButton = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
+        seasonNameLabel = new javax.swing.JLabel();
         statusBarPanel = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         menuBar = new javax.swing.JMenuBar();
@@ -456,8 +468,8 @@ final class MainWindow extends javax.swing.JFrame {
 
         raceresultPanel.add(raceresultButtonPanel, java.awt.BorderLayout.EAST);
 
-        jLabel1.setText("Add races to the season below.");
-        raceresultPanel.add(jLabel1, java.awt.BorderLayout.NORTH);
+        seasonNameLabel.setText("Season name goes here..");
+        raceresultPanel.add(seasonNameLabel, java.awt.BorderLayout.NORTH);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
@@ -956,6 +968,8 @@ final class MainWindow extends javax.swing.JFrame {
         RacesTableModel model = new RacesTableModel(season.getRaces());
         raceresultsTable.setModel(model);
         raceresultsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        
+        seasonNameLabel.setText(currentSeasonText() + " - Add races below.");
     }
 
     private void refreshButtons() {
@@ -1108,7 +1122,6 @@ final class MainWindow extends javax.swing.JFrame {
     private javax.swing.JMenu fileMenu;
     private javax.swing.JButton finishedButton;
     private javax.swing.JMenu helpMenu;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JButton loadSeasonButton;
     private javax.swing.JPanel mainMenuPanel;
@@ -1146,6 +1159,7 @@ final class MainWindow extends javax.swing.JFrame {
     private javax.swing.JTable raceresultsTable;
     private javax.swing.JMenu reportsMenu;
     private javax.swing.JMenuItem saveItem;
+    private javax.swing.JLabel seasonNameLabel;
     private javax.swing.JMenuItem setupClubItem;
     private javax.swing.JPanel setupClubPanel;
     private javax.swing.JPanel statusBarPanel;
