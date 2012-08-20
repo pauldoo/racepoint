@@ -3,8 +3,6 @@ Only generate averages report on request, not on every race.
 Make it clear which season is being edited:
     Add date of season to window or titlebar?
 
-Change to use '-' character instead of ':' when entering times/dates.
-
 Converting between fed and club modes leaves the member data messy.
 
 Drop getters for read-only fields in model files.
