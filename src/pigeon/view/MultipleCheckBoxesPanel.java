@@ -47,6 +47,7 @@ public class MultipleCheckBoxesPanel<T extends Comparable<T>> extends javax.swin
     public MultipleCheckBoxesPanel(SortedSet<T> available, Set<T> selected, Creator<T> creator) {
         initComponents();
 
+        this.addButton.setText(addButton.getText() + " " + creator.friendlyName());
         this.creator = creator;
         checkBoxes = new HashMap<T, JCheckBox>();
         for (T t: available) {
