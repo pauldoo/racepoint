@@ -43,6 +43,7 @@ import pigeon.model.Race;
 import pigeon.model.Racepoint;
 import pigeon.model.Season;
 import pigeon.model.ValidationException;
+import pigeon.report.AveragesReporter;
 import pigeon.report.DefaultStreamProvider;
 import pigeon.report.DistanceReporter;
 import pigeon.report.MembersReporter;
@@ -96,6 +97,10 @@ final class MainWindow extends javax.swing.JFrame {
         return new Configuration(in);
     }
 
+    private boolean modeIs(Organization.Type mode) {
+        return season != null && season.getOrganization().getType() == mode;
+    }
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -141,6 +146,7 @@ final class MainWindow extends javax.swing.JFrame {
         raceresultEditButton = new javax.swing.JButton();
         raceresultDeleteButton = new javax.swing.JButton();
         raceresultCalculateResultsButton = new javax.swing.JButton();
+        raceresultCalculateAveragesButton = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         statusBarPanel = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
@@ -432,8 +438,21 @@ final class MainWindow extends javax.swing.JFrame {
         gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
-        gridBagConstraints.weighty = 1.0;
         raceresultButtonPanel.add(raceresultCalculateResultsButton, gridBagConstraints);
+
+        raceresultCalculateAveragesButton.setText("Calculate Averages");
+        raceresultCalculateAveragesButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                raceresultCalculateAveragesButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 4;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
+        gridBagConstraints.weighty = 1.0;
+        raceresultButtonPanel.add(raceresultCalculateAveragesButton, gridBagConstraints);
 
         raceresultPanel.add(raceresultButtonPanel, java.awt.BorderLayout.EAST);
 
@@ -914,8 +933,8 @@ final class MainWindow extends javax.swing.JFrame {
     private void reloadControlData(String cardName) {
         if (season != null) {
             clubNameText.setText(season.getOrganization().getName());
-            clubRadioButton.setSelected(season.getOrganization().getType() == Organization.Type.CLUB);
-            federationRadioButton.setSelected(season.getOrganization().getType() == Organization.Type.FEDERATION);
+            clubRadioButton.setSelected(modeIs(Organization.Type.CLUB));
+            federationRadioButton.setSelected(modeIs(Organization.Type.FEDERATION));
 
             reloadMembersList();
             reloadRacepointsList();
@@ -949,6 +968,7 @@ final class MainWindow extends javax.swing.JFrame {
         raceresultEditButton.setEnabled( raceresultsTable.getSelectedRow() != -1 );
         raceresultDeleteButton.setEnabled( raceresultsTable.getSelectedRow() != -1 );
         raceresultCalculateResultsButton.setEnabled( raceresultsTable.getSelectedRow() != -1 );
+        raceresultCalculateAveragesButton.setEnabled( raceresultsTable.getSelectedRow() != -1 && modeIs(Organization.Type.CLUB));
     }
 
     private void refreshMenus(String cardName) {
@@ -986,6 +1006,12 @@ final class MainWindow extends javax.swing.JFrame {
         }
         this.season = season.repSetOrganization(season.getOrganization().repSetType(newType));
     }//GEN-LAST:event_organizationTypeActionPerformed
+
+    private void raceresultCalculateAveragesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_raceresultCalculateAveragesButtonActionPerformed
+        int index = raceresultsTable.getSelectedRow();
+        Race race = season.getRaces().get(index);
+        writeReport(new AveragesReporter(season, race, configuration.getCompetitions(), configuration.getResultsFooter()));
+    }//GEN-LAST:event_raceresultCalculateAveragesButtonActionPerformed
 
     private static Organization editDistancesForMember(Component parent, Organization organization, Member member) throws UserCancelledException {
         return DistanceEditor.editMemberDistances(parent, member, organization);
@@ -1111,6 +1137,7 @@ final class MainWindow extends javax.swing.JFrame {
     private javax.swing.JPanel racepointsPanel;
     private javax.swing.JButton raceresultAddButton;
     private javax.swing.JPanel raceresultButtonPanel;
+    private javax.swing.JButton raceresultCalculateAveragesButton;
     private javax.swing.JButton raceresultCalculateResultsButton;
     private javax.swing.JButton raceresultDeleteButton;
     private javax.swing.JButton raceresultEditButton;

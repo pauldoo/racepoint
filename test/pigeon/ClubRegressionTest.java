@@ -15,10 +15,13 @@
 */
 package pigeon;
 
+import java.io.IOException;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import pigeon.model.Organization;
+import pigeon.model.Race;
 import pigeon.model.ValidationException;
+import pigeon.report.AveragesReporter;
 
 /**
 
@@ -45,4 +48,19 @@ public class ClubRegressionTest extends RegressionTestBase {
     protected String getPrefix() {
         return "Club_";
     }
+    
+    public void testAveragesReports() throws IOException
+    {
+        final boolean isClub = season.getOrganization().getType() == Organization.Type.CLUB;
+
+        for (Race race: season.getRaces()) {
+            AveragesReporter reporter = new AveragesReporter(season, race, configuration.getCompetitions(), configuration.getResultsFooter());
+            RegressionStreamProvider streamProvider = new RegressionStreamProvider();
+            reporter.write(streamProvider);
+
+            assertEquals(isClub, streamProvider.getFilenames().contains("Averages.html"));
+
+            checkRegression(streamProvider.getBytes("Averages.html"), "Averages_" + race.getRacepoint());
+        }
+    }    
 }

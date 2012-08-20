@@ -67,6 +67,7 @@ import pigeon.model.Season;
 import pigeon.model.Sex;
 import pigeon.model.Time;
 import pigeon.model.ValidationException;
+import pigeon.report.AveragesReporter;
 import pigeon.report.DistanceReporter;
 import pigeon.report.MembersReporter;
 import pigeon.report.RaceReporter;
@@ -303,7 +304,7 @@ public abstract class RegressionTestBase extends TestCase
     {
     }
 
-    private void checkRegression(final byte[] tmpData, String name) throws IOException
+    protected void checkRegression(final byte[] tmpData, String name) throws IOException
     {
         final File tmpFile = new File("regression/" + getPrefix() + name + (UPDATE_OK_FILES ? ".ok" : ".tmp"));
         final File okFile = new File("regression/" + getPrefix() + name + ".ok");
@@ -415,23 +416,6 @@ public abstract class RegressionTestBase extends TestCase
             checkRegression(streamProvider.getBytes("Pools.html"), "Pools_" + race.getRacepoint());
         }
     }
-    
-    public void testAveragesReports() throws IOException
-    {
-        final boolean isClub = season.getOrganization().getType() == Organization.Type.CLUB;
-
-        for (Race race: season.getRaces()) {
-            RaceReporter reporter = new RaceReporter(season, race, configuration.getCompetitions(), configuration.getResultsFooter());
-            RegressionStreamProvider streamProvider = new RegressionStreamProvider();
-            reporter.write(streamProvider);
-
-            assertEquals(isClub, streamProvider.getFilenames().contains("Averages.html"));
-            
-            if (isClub) {
-                checkRegression(streamProvider.getBytes("Averages.html"), "Averages_" + race.getRacepoint());
-            }
-        }
-    }    
 
     public void testMembersReport() throws IOException
     {
