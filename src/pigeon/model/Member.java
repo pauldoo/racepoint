@@ -63,20 +63,9 @@ public final class Member implements Serializable, Comparable<Member> {
         return new Member(club, section, name, address, telephone, SHUNumber);
     }
 
-    private String getNameAndClubAndSection() {
-        StringBuilder result = new StringBuilder(this.getName());
-        if (getClub() != null && getClub().isEmpty() == false) {
-            result.append(", ").append(this.getClub());
-        }
-        if (getSection() != null && getSection().isEmpty() == false) {
-            result.append(", ").append(this.getSection());
-        }
-        return result.toString();
-    }
-
     @Override
     public String toString() {
-        return getNameAndClubAndSection();
+        return getName();
     }
 
     @Override
