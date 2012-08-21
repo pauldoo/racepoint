@@ -123,9 +123,14 @@ public final class Member implements Serializable, Comparable<Member> {
         return new Member(club, section, name, address, telephone, SHUNumber.trim());
     }
 
-    public String getClub()
+    public String getClub(Organization.Type type)
     {
-        return club;
+        switch (type) {
+            case FEDERATION:
+                return club;
+            default:
+                throw new IllegalArgumentException("Club only available in Fed mode.");
+        }
     }
 
     public Member repSetClub(String club)
@@ -133,9 +138,14 @@ public final class Member implements Serializable, Comparable<Member> {
         return new Member(club.trim(), section, name, address, telephone, SHUNumber);
     }
 
-    public String getSection()
+    public String getSection(Organization.Type type)
     {
-        return section;
+        switch (type) {
+            case FEDERATION:
+                return section;
+            default:
+                throw new IllegalArgumentException("Section only available in Fed mode.");
+        }
     }
 
     public Member repSetSection(String section)

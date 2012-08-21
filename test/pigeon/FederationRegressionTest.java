@@ -16,9 +16,13 @@
 
 package pigeon;
 
+import java.util.Map;
+import java.util.Random;
+import java.util.TreeMap;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 import pigeon.model.Organization;
+import pigeon.model.Race;
 import pigeon.model.ValidationException;
 
 public class FederationRegressionTest extends RegressionTestBase {
@@ -41,5 +45,22 @@ public class FederationRegressionTest extends RegressionTestBase {
     @Override
     protected String getPrefix() {
         return "Federation_";
+    }
+
+    @Override
+    protected Race populateMembersEntered(Race race, Random random) {
+        {
+            Map<String, Integer> membersEntered = new TreeMap<String, Integer>();
+            membersEntered.put("East", random.nextInt(50) + 50);
+            membersEntered.put("West", random.nextInt(50) + 50);
+            race = race.repSetMembersEntered(membersEntered);
+        }
+        {
+            Map<String, Integer> birdsEntered = new TreeMap<String, Integer>();
+            birdsEntered.put("East", random.nextInt(150) + 50);
+            birdsEntered.put("West", random.nextInt(150) + 50);
+            race = race.repSetBirdsEntered(birdsEntered);
+        }
+        return race;
     }
 }

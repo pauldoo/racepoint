@@ -41,13 +41,13 @@ final class MemberInfo extends javax.swing.JPanel {
                 for (String c: Utilities.findClubNames(organization)) {
                     clubCombo.addItem(c);
                 }
-                clubCombo.setSelectedItem( member.getClub() );
+                clubCombo.setSelectedItem( member.getClub(organization.getType()) );
                 clubCombo.setEditable( editable );
 
-                for (String s: Utilities.findSectionNames(organization)) {
+                for (String s: pigeon.model.Utilities.allSections(organization, false)) {
                     sectionCombo.addItem(s);
                 }
-                sectionCombo.setSelectedItem( member.getSection() );
+                sectionCombo.setSelectedItem( member.getSection(organization.getType()) );
                 sectionCombo.setEditable( editable );
                 break;
 

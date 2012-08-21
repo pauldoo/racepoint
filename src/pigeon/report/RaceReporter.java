@@ -81,20 +81,18 @@ public final class RaceReporter implements Reporter {
         PrintStream out = Utilities.writeHtmlHeader(raceReportStream, race.getRacepoint().toString() + " on " + raceDate);
         Organization club = season.getOrganization();
         
-        List<String> sections = Utilities.participatingSections(club);
-        // Push the null section to the front to guarantee we do the whole lot.
-        sections.add(0, null);
+        List<String> sections = pigeon.model.Utilities.allSections(club, true);
 
         for (String section: sections) {
-            final String sectionNotNull = (section == null) ? "Open" : section;
-            if (section != sections.get(sections.size() - 1)) {
+            final boolean isOpenSection = section.equals(pigeon.model.Utilities.OPEN_SECTION);
+            if (!section.equals(sections.get(sections.size() - 1))) {
                 out.println("<div class=\"outer\">");
             } else {
                 out.println("<div class=\"outer last\">");
             }
 
             out.println("<h1>" + club.getName() + "</h1>");
-            if (section != null) {
+            if (!isOpenSection) {
                 out.println("<h2>Section: " + section + "</h2>");
             }
             out.println("<h2>Race from " + race.getRacepoint().toString() + "</h2>");
@@ -102,7 +100,7 @@ public final class RaceReporter implements Reporter {
             SortedSet<BirdResult> results = new TreeSet<BirdResult>();
 
             for (Clock clock: race.getClocks()) {
-                if (section != null && !clock.getMember().getSection().equals(section)) {
+                if (!isOpenSection && !clock.getMember().getSection(club.getType()).equals(section)) {
                     continue;
                 }
                 for (Time time: clock.getTimes()) {
@@ -110,7 +108,7 @@ public final class RaceReporter implements Reporter {
 
                     row.html.append("<td>" + clock.getMember().getName() + "</td>");
                     if (listClubNames()) {
-                        row.html.append("<td>" + clock.getMember().getClub() + "</td>");
+                        row.html.append("<td>" + clock.getMember().getClub(club.getType()) + "</td>");
                     }
                     if (clock.getBirdsEntered() > 0) {
                         row.html.append("<td>" + clock.getBirdsEntered() + "</td>");
@@ -132,7 +130,7 @@ public final class RaceReporter implements Reporter {
             }
             int memberCount;
             int birdCount;
-            if (section != null) {
+            if (!isOpenSection) {
                 memberCount = race.getMembersEntered().get(section);
                 birdCount = race.getBirdsEntered().get(section);
             } else {
@@ -150,7 +148,7 @@ public final class RaceReporter implements Reporter {
                 out.print("<th>Day</th>");
             }
             out.print("<th>Time</th><th>Miles</th><th>Yards</th><th>Ring No.</th><th>Colour</th><th>Sex</th><th>Pools</th><th/>");
-            if (section != null) {
+            if (!isOpenSection) {
                 out.print("<th class='numeric'>Prize</th>");
             }
             out.println("<th class='numeric'>Velocity</th></tr>");
@@ -165,13 +163,13 @@ public final class RaceReporter implements Reporter {
             // For each competition within this section, calculate the number of winners
             Map<String, Integer> numberOfWinners = new TreeMap<String, Integer>();
             for (Competition c: competitions) {
-                if (section != null || c.isAvailableInOpen()) {
-                    int entrants = birdsInPools.get(sectionNotNull).get(c.getName());
+                if (!isOpenSection || c.isAvailableInOpen()) {
+                    int entrants = birdsInPools.get(section).get(c.getName());
                     numberOfWinners.put(c.getName(), c.maximumNumberOfWinners(entrants));
                 }
             }
 
-            List<Double> prizes = (section == null) ? null : race.getPrizes().get(section);
+            List<Double> prizes = (isOpenSection) ? null : race.getPrizes().get(section);
             int pos = 0;
             for (BirdResult row: results) {
                 pos ++;
@@ -180,7 +178,7 @@ public final class RaceReporter implements Reporter {
                 double totalPrizeWonByThisBird = 0.0;
 
                 Collection<String> competitionsEnteredByThisBird = null;
-                if (section == null) {
+                if (isOpenSection) {
                     competitionsEnteredByThisBird = row.time.getOpenCompetitionsEntered();
                 } else {
                     competitionsEnteredByThisBird = row.time.getSectionCompetitionsEntered();
@@ -192,7 +190,7 @@ public final class RaceReporter implements Reporter {
                     if (competitionsEnteredByThisBird.contains(c.getName())) {
                         int position = competitionPositions.get(c.getName()) + 1;
                         if (position <= numberOfWinners.get(c.getName())) {
-                            int entrants = birdsInPools.get(sectionNotNull).get(c.getName());
+                            int entrants = birdsInPools.get(section).get(c.getName());
                             double prize = c.prize(position, entrants);
                             totalPrizeWonByThisBird += prize;
                             competitionPositions.put(c.getName(), position);
@@ -208,7 +206,7 @@ public final class RaceReporter implements Reporter {
                     row.html.append("<td/>");
                 }
 
-                if (section != null) {
+                if (!isOpenSection) {
                     if (prizes != null && pos <= prizes.size() && prizes.get(pos-1) > 0) {
                         row.html.append("<td class='numeric'>" + String.format("%.2f", prizes.get(pos-1)) + "</td>");
                     } else {
@@ -236,12 +234,10 @@ public final class RaceReporter implements Reporter {
         PrintStream out = Utilities.writeHtmlHeader(competitionReportStream, race.getRacepoint().toString() + " on " + raceDate);
         Organization club = season.getOrganization();
 
-        List<String> sections = Utilities.participatingSections(club);
-        // Push the null section to the front to guarantee we do the whole lot.
-        sections.add(0, null);
+        List<String> sections = pigeon.model.Utilities.allSections(club, true);
 
         for (String section: sections) {
-            final String sectionNotNull = (section == null) ? "Open" : section;
+            final boolean isOpenSection = pigeon.model.Utilities.OPEN_SECTION.equals(section);
 
             if (section != sections.get(sections.size() - 1)) {
                 out.println("<div class=\"outer\">");
@@ -250,7 +246,7 @@ public final class RaceReporter implements Reporter {
             }
 
             out.println("<h1>" + club.getName() + "</h1>");
-            if (section != null) {
+            if (!isOpenSection) {
                 out.println("<h2>Section: " + section + "</h2>");
             } else {
                 out.println("<h2>Open</h2>");
@@ -262,7 +258,7 @@ public final class RaceReporter implements Reporter {
             SortedSet<BirdResult> results = new TreeSet<BirdResult>();
 
             for (Clock clock: race.getClocks()) {
-                if (section != null && !clock.getMember().getSection().equals(section)) {
+                if (!isOpenSection && !clock.getMember().getSection(club.getType()).equals(section)) {
                     continue;
                 }
                 memberCount ++;
@@ -272,7 +268,7 @@ public final class RaceReporter implements Reporter {
 
                     row.html.append("<td>" + clock.getMember().getName() + "</td>");
                     if (listClubNames()) {
-                        row.html.append("<td>" + clock.getMember().getClub() + "</td>");
+                        row.html.append("<td>" + clock.getMember().getClub(club.getType()) + "</td>");
                     }
                     row.html.append("<td>" + time.getRingNumber() + "</td>");
                     results.add(row);
@@ -286,7 +282,7 @@ public final class RaceReporter implements Reporter {
             }
             out.print("<th>Ring Number</th>");
             for (Competition c: competitions) {
-                if (section != null || c.isAvailableInOpen()) {
+                if (!isOpenSection || c.isAvailableInOpen()) {
                     out.print("<th class='numeric'>" + c.getName() + "</th>");
                 }
             }
@@ -296,7 +292,7 @@ public final class RaceReporter implements Reporter {
             // For each competition name keep a track of how many of the winners we have found.
             Map<String, Integer> competitionPositions = new TreeMap<String, Integer>();
             for (Competition c: competitions) {
-                if (section != null || c.isAvailableInOpen()) {
+                if (!isOpenSection || c.isAvailableInOpen()) {
                     competitionPositions.put(c.getName(), 0);
                 }
             }
@@ -304,8 +300,8 @@ public final class RaceReporter implements Reporter {
             // For each competition within this section, calculate the number of winners
             Map<String, Integer> numberOfWinners = new TreeMap<String, Integer>();
             for (Competition c: competitions) {
-                if (section != null || c.isAvailableInOpen()) {
-                    int entrants = entrantsCount.get(sectionNotNull).get(c.getName());
+                if (!isOpenSection || c.isAvailableInOpen()) {
+                    int entrants = entrantsCount.get(section).get(c.getName());
                     numberOfWinners.put(c.getName(), c.maximumNumberOfWinners(entrants));
                 }
             }
@@ -315,7 +311,7 @@ public final class RaceReporter implements Reporter {
                 double totalPrizeWonByThisBird = 0.0;
 
                 Collection<String> competitionsEnteredByThisBird = null;
-                if (section == null) {
+                if (isOpenSection) {
                     competitionsEnteredByThisBird = row.time.getOpenCompetitionsEntered();
                 } else {
                     competitionsEnteredByThisBird = row.time.getSectionCompetitionsEntered();
@@ -323,11 +319,11 @@ public final class RaceReporter implements Reporter {
 
                 // Check the competitions that this bird entered
                 for (Competition c: competitions) {
-                    if (section != null || c.isAvailableInOpen()) {
+                    if (!isOpenSection || c.isAvailableInOpen()) {
                         if (competitionsEnteredByThisBird.contains(c.getName())) {
                             int position = competitionPositions.get(c.getName()) + 1;
                             if (position <= numberOfWinners.get(c.getName())) {
-                                int entrants = entrantsCount.get(sectionNotNull).get(c.getName());
+                                int entrants = entrantsCount.get(section).get(c.getName());
                                 double prize = c.prize(position, entrants);
                                 row.html.append("<td class='numeric'>" + String.format("%.2f", prize) + "</td>");
                                 totalPrizeWonByThisBird += prize;
@@ -353,9 +349,9 @@ public final class RaceReporter implements Reporter {
                 out.print("<tr><td/><td/><td>Total</td>");
                 double totalPrizeGivenToEveryone = 0.0;
                 for (Competition c: competitions) {
-                    if (section != null || c.isAvailableInOpen()) {
+                    if (!isOpenSection || c.isAvailableInOpen()) {
                         double totalPrizeGivenForThisCompetition = 0.0;
-                        int entrants = entrantsCount.get(sectionNotNull).get(c.getName());
+                        int entrants = entrantsCount.get(section).get(c.getName());
                         for (int pos = 1; pos <= competitionPositions.get(c.getName()); ++pos) {
                             totalPrizeGivenForThisCompetition += c.prize(pos, entrants);
                         }
@@ -373,8 +369,8 @@ public final class RaceReporter implements Reporter {
                 out.print("<tr><td/><td/><td>Unclaimed</td>");
                 double totalUnclaimed = 0.0;
                 for (Competition c: competitions) {
-                    if (section != null || c.isAvailableInOpen()) {
-                        int entrants = entrantsCount.get(sectionNotNull).get(c.getName());
+                    if (!isOpenSection || c.isAvailableInOpen()) {
+                        int entrants = entrantsCount.get(section).get(c.getName());
                         double unclaimed = c.totalPoolMoney(entrants) - c.totalClubTake(entrants) - totalForCompetition.get(c.getName());
                         totalUnclaimed += unclaimed;
                         out.print("<td class='numeric'>" + String.format("%.2f", unclaimed) + "</td>");
@@ -389,8 +385,8 @@ public final class RaceReporter implements Reporter {
                 out.print("<tr><td/><td/><td>" + clubTakeString(competitions) + "</td>");
                 double totalClubTake = 0.0;
                 for (Competition c: competitions) {
-                    if (section != null || c.isAvailableInOpen()) {
-                        int entrants = entrantsCount.get(sectionNotNull).get(c.getName());
+                    if (!isOpenSection || c.isAvailableInOpen()) {
+                        int entrants = entrantsCount.get(section).get(c.getName());
                         double clubTake = c.totalClubTake(entrants);
                         totalClubTake += clubTake;
                         out.print("<td class='numeric'>" + String.format("%.2f", clubTake) + "</td>");
@@ -405,8 +401,8 @@ public final class RaceReporter implements Reporter {
                 out.print("<tr><td/><td/><td>Total pool money</td>");
                 double totalPoolMoney = 0.0;
                 for (Competition c: competitions) {
-                    if (section != null || c.isAvailableInOpen()) {
-                        int entrants = entrantsCount.get(sectionNotNull).get(c.getName());
+                    if (!isOpenSection || c.isAvailableInOpen()) {
+                        int entrants = entrantsCount.get(section).get(c.getName());
                         double poolMoney = c.totalPoolMoney(entrants);
                         totalPoolMoney += poolMoney;
                         out.print("<td class='numeric'>" + String.format("%.2f", poolMoney) + "</td>");

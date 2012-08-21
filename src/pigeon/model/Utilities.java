@@ -24,14 +24,18 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.UUID;
 
 /**
     Utility functions for manipulating time.
 */
 public final class Utilities
 {
+    public static String OPEN_SECTION = "Open";
+
     // Non-Creatable
     private Utilities()
     {
@@ -210,5 +214,35 @@ public final class Utilities
     
      static <T> T defaultIfNull(T val, T def) {
         return (val == null) ? def : val;
+    }
+     
+    /**
+        Returns the list of all the sections in the organisation.
+     
+        Also includes the special value OPEN_SECTION if in Club mode, or the flag
+        includeOpenSectionWhenInFedMode is set.
+    */
+    public static List<String> allSections(Organization organization, boolean includeOpenSectionWhenInFedMode) {
+        
+        List<String> result = new ArrayList<String>();
+        Organization.Type orgType = organization.getType();
+        
+        if (orgType == Organization.Type.CLUB || includeOpenSectionWhenInFedMode) {
+            result.add(0, OPEN_SECTION);
+        }
+        
+        if (orgType == Organization.Type.FEDERATION) {
+            SortedSet<String> set = new TreeSet<String>();
+            for (Member m: organization.getMembers()) {
+                String section = m.getSection(orgType);
+                
+                if (section != null && !section.isEmpty()) {
+                    set.add(section);
+                }
+            }
+            result.addAll(set);
+        }
+        
+        return Collections.unmodifiableList(result);
     }
 }

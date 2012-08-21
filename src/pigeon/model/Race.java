@@ -35,7 +35,7 @@ import java.util.TreeSet;
 public final class Race implements Serializable, Comparable<Race> {
 
     private static final long serialVersionUID = 4311510053131167930L;
-
+    
     private final Racepoint racepoint;
     private final Date liberationDate;
     private final int daysCovered;
@@ -44,6 +44,8 @@ public final class Race implements Serializable, Comparable<Race> {
     private final String windDirection;
     private final List<Clock> clocks;
 
+    // TODO: These maps get very messed up if the user flips between Club / Fed modes.
+    
     // Map from Section -> Member count
     private final Map<String, Integer> membersEntered;
 

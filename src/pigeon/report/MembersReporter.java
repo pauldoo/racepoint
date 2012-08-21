@@ -72,10 +72,10 @@ final public class MembersReporter implements Reporter
                         break;
                     case FEDERATION:
                         final Element clubElement = document.createElement("Club");
-                        clubElement.setTextContent(member.getClub());
+                        clubElement.setTextContent(member.getClub(mode));
                         memberElement.appendChild(clubElement);
                         final Element sectionElement = document.createElement("Section");
-                        sectionElement.setTextContent(member.getSection());
+                        sectionElement.setTextContent(member.getSection(mode));
                         memberElement.appendChild(sectionElement);
                 }
 

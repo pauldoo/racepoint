@@ -31,6 +31,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -109,22 +110,6 @@ public final class Utilities
         if (out.checkError()) {
             throw new IOException();
         }
-    }
-
-    /**
-        Returns a list of all the different sections,
-        or an empty collection if no section information is available.
-    */
-    public static List<String> participatingSections(Organization club)
-    {
-        Set<String> result = new TreeSet<String>();
-        for (Member member: club.getMembers()) {
-            String section = member.getSection();
-            if (section != null) {
-                result.add(section);
-            }
-        }
-        return new ArrayList<String>(result);
     }
 
     static BirdResult calculateVelocity(Organization club, Race race, Clock clock, Time time)

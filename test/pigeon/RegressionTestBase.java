@@ -67,7 +67,6 @@ import pigeon.model.Season;
 import pigeon.model.Sex;
 import pigeon.model.Time;
 import pigeon.model.ValidationException;
-import pigeon.report.AveragesReporter;
 import pigeon.report.DistanceReporter;
 import pigeon.report.MembersReporter;
 import pigeon.report.RaceReporter;
@@ -135,18 +134,7 @@ public abstract class RegressionTestBase extends TestCase
                 race = race.repSetHoursOfDarkness(darknessBegins, darknessEnds);
             }
 
-            {
-                Map<String, Integer> membersEntered = new TreeMap<String, Integer>();
-                membersEntered.put("East", random.nextInt(50) + 50);
-                membersEntered.put("West", random.nextInt(50) + 50);
-                race = race.repSetMembersEntered(membersEntered);
-            }
-            {
-                Map<String, Integer> birdsEntered = new TreeMap<String, Integer>();
-                birdsEntered.put("East", random.nextInt(150) + 50);
-                birdsEntered.put("West", random.nextInt(150) + 50);
-                race = race.repSetBirdsEntered(birdsEntered);
-            }
+            race = populateMembersEntered(race, random);
 
             for (int i = 0; i < season.getOrganization().getNumberOfMembers(); i++) {
                 Member m = season.getOrganization().getMembers().get(i);
@@ -489,4 +477,6 @@ public abstract class RegressionTestBase extends TestCase
     }
 
     protected abstract String getPrefix();
+
+    protected abstract Race populateMembersEntered(Race race, Random random);
 }

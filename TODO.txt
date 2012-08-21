@@ -1,5 +1,7 @@
 Converting between fed and club modes leaves the member data messy.
 
+Converting between fed and club modes leaves the race data messy.
+
 Drop getters for read-only fields in model files.
 
 Update unit tests for averages.
@@ -11,4 +13,3 @@ Revisit which bits of functionality are needed for club vs fed.
 Migrate tests to JUnit 4.
 
 HTML escape report outputs.
-

@@ -105,27 +105,17 @@ public final class Utilities {
     */
     public static Collection<String> findClubNames(Organization organization)
     {
+        Organization.Type orgType = organization.getType();
         SortedSet<String> result = new TreeSet<String>();
-        for (Member m: organization.getMembers()) {
-            if (m.getClub() != null && !m.getClub().equals("")) {
-                result.add(m.getClub());
+        if (orgType == Organization.Type.FEDERATION) {
+            for (Member m: organization.getMembers()) {
+                String club = m.getClub(orgType);
+                if (club != null && !club.isEmpty()) {
+                    result.add(club);
+                }
             }
         }
-        return Collections.unmodifiableCollection(result);
-    }
-
-    /**
-        Given an Organization, return a list of all the section names mentioned in member profiles.
-    */
-    public static Collection<String> findSectionNames(Organization organization)
-    {
-        SortedSet<String> result = new TreeSet<String>();
-        for (Member m: organization.getMembers()) {
-            if (m.getSection() != null && !m.getSection().equals("")) {
-                result.add(m.getSection());
-            }
-        }
-        return Collections.unmodifiableCollection(result);
+        return Collections.unmodifiableList(new ArrayList<String>(result));
     }
 
     /**

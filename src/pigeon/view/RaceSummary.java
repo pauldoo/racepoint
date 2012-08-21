@@ -24,6 +24,7 @@ import java.awt.Rectangle;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -500,7 +501,7 @@ private void daysCoveredComboActionPerformed(java.awt.event.ActionEvent evt) {//
             panel.add(birdCountLabel);
         }
 
-        List<String> sections = pigeon.report.Utilities.participatingSections(club);
+        List<String> sections = pigeon.model.Utilities.allSections(club, false);
         for (String section: sections) {
             {
                 constraints.anchor = GridBagConstraints.EAST;
@@ -552,12 +553,7 @@ private void daysCoveredComboActionPerformed(java.awt.event.ActionEvent evt) {//
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.insets = new Insets(10, 10, 10, 10);
 
-        List<String> sections = pigeon.report.Utilities.participatingSections(club);
-        if (sections.contains("Open")) {
-            throw new IllegalArgumentException("Arg!  A section called 'Open' has been used, that's too confusing!");
-        }
-        sections.add(0, "Open");
-
+        List<String> sections = new ArrayList<String>(pigeon.model.Utilities.allSections(club, true));
         for (String section: sections) {
             textFieldMap.put(section, new TreeMap<String, JTextField>());
 
@@ -611,7 +607,7 @@ private void daysCoveredComboActionPerformed(java.awt.event.ActionEvent evt) {//
         GridBagLayout gridbag = new GridBagLayout();
         panel.setLayout(gridbag);
 
-        List<String> sections = pigeon.report.Utilities.participatingSections(club);
+        List<String> sections = pigeon.model.Utilities.allSections(club, false);
         for (String section: sections) {
             GridBagConstraints constraints = new GridBagConstraints();
             constraints.insets = new Insets(10, 10, 10, 10);
