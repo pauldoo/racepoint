@@ -1,6 +1,7 @@
-Converting between fed and club modes leaves the member data messy.
-
-Converting between fed and club modes leaves the race data messy.
+Converting between fed and club modes:
+    Leaves the member data messy. - problematic
+    Leaves the race data messy. - more problematic
+    Remove ability to change between modes??
 
 Drop getters for read-only fields in model files.
 
