@@ -46,6 +46,7 @@ import pigeon.model.Racepoint;
 import pigeon.model.Season;
 import pigeon.model.ValidationException;
 import pigeon.report.AveragesReporter;
+import pigeon.report.CompetitionReporter;
 import pigeon.report.DefaultStreamProvider;
 import pigeon.report.DistanceReporter;
 import pigeon.report.MembersReporter;
@@ -673,6 +674,9 @@ final class MainWindow extends javax.swing.JFrame {
         int index = raceresultsTable.getSelectedRow();
         Race race = season.getRaces().get(index);
         writeReport(new RaceReporter(season, race, configuration.getCompetitions(), configuration.getResultsFooter()));
+        if (season.getOrganization().getType() == Organization.Type.FEDERATION) {
+            writeReport(new CompetitionReporter(season, race, configuration.getCompetitions(), configuration.getResultsFooter()));
+        }
     }//GEN-LAST:event_raceresultCalculateResultsButtonActionPerformed
 
     private void clubNameTextFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_clubNameTextFocusLost

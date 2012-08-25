@@ -23,6 +23,8 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import pigeon.competitions.Competition;
 import pigeon.model.Constants;
@@ -79,17 +81,16 @@ final class RingTimeEditor extends javax.swing.JPanel
                 break;
 
             case CLUB:
-                openPoolsLabel.setText("Pools");
-                sectionPoolsLabel.setEnabled(false);
-                sectionPoolsPanel.setEnabled(false);
-                for (JCheckBox checkBox: sectionCompetitionCheckboxes.values()) {
+                disableAndRemove(openPoolsLabel);
+                disableAndRemove(openPoolsPanel);
+                disableAndRemove(sectionPoolsLabel);
+                disableAndRemove(sectionPoolsPanel);
+                
+                for (JCheckBox checkBox: openCompetitionCheckboxes.values()) {
                     checkBox.setEnabled(false);
                 }
-                this.remove(sectionPoolsLabel);
-                this.remove(sectionPoolsPanel);
-
-                for (String name: time.getOpenCompetitionsEntered()) {
-                    openCompetitionCheckboxes.get(name).setSelected(true);
+                for (JCheckBox checkBox: sectionCompetitionCheckboxes.values()) {
+                    checkBox.setEnabled(false);
                 }
                 break;
 
@@ -127,17 +128,9 @@ final class RingTimeEditor extends javax.swing.JPanel
         time = time.repSetSex((Sex)birdSexCombo.getSelectedItem());
 
         final Organization.Type organisationType = season.getOrganization().getType();
-        switch (organisationType) {
-            case FEDERATION:
-                time = time.repSetOpenCompetitionsEntered(findSelectedBoxes(openCompetitionCheckboxes));
-                time = time.repSetSectionCompetitionsEntered(findSelectedBoxes(sectionCompetitionCheckboxes));
-                break;
-            case CLUB:
-                time = time.repSetOpenCompetitionsEntered(findSelectedBoxes(openCompetitionCheckboxes));
-                break;
-
-            default:
-                throw new IllegalArgumentException("Unexpected organisation type: " + organisationType);
+        if (organisationType == Organization.Type.FEDERATION) {
+            time = time.repSetOpenCompetitionsEntered(findSelectedBoxes(openCompetitionCheckboxes));
+            time = time.repSetSectionCompetitionsEntered(findSelectedBoxes(sectionCompetitionCheckboxes));
         }
     }
 
@@ -399,5 +392,10 @@ final class RingTimeEditor extends javax.swing.JPanel
         for (Sex sex: Sex.values()) {
             birdSexCombo.addItem(sex);
         }
+    }
+
+    private void disableAndRemove(JComponent component) {
+        component.setEnabled(false);
+        this.remove(component);
     }
 }

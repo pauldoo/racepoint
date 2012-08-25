@@ -186,6 +186,19 @@ final class RaceSummary extends javax.swing.JPanel {
         }
 
         updateHoursOfDarknessEnabledStatus();
+        
+        if (club.getType() == Organization.Type.CLUB) {
+            setTabEnabled(poolEntrantsCountPanel, false);
+            setTabEnabled(prizesPanel, false);
+        }
+    }
+
+    private void setTabEnabled(Component component, boolean enabled) {
+        final int index = tabbedPane.indexOfComponent(component);
+        if (index == -1) {
+            throw new IllegalArgumentException("Component not present in tab panel");
+        }
+        tabbedPane.setEnabledAt(index, enabled);
     }
 
     private void addComboOptions(Season season, Configuration configuration) {
@@ -234,7 +247,7 @@ final class RaceSummary extends javax.swing.JPanel {
     private void initComponents() {
         java.awt.GridBagConstraints gridBagConstraints;
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
+        tabbedPane = new javax.swing.JTabbedPane();
         summaryPanel = new javax.swing.JPanel();
         racepointLabel = new javax.swing.JLabel();
         racepointCombo = new javax.swing.JComboBox();
@@ -346,15 +359,15 @@ final class RaceSummary extends javax.swing.JPanel {
         gridBagConstraints.insets = new java.awt.Insets(10, 10, 10, 10);
         summaryPanel.add(darknessEnds, gridBagConstraints);
 
-        jTabbedPane1.addTab("Summary", summaryPanel);
-        jTabbedPane1.addTab("No. Race Entrants", raceEntrantsCountPanel);
-        jTabbedPane1.addTab("No. Pool Entrants", poolEntrantsCountPanel);
-        jTabbedPane1.addTab("Prizes", prizesPanel);
+        tabbedPane.addTab("Summary", summaryPanel);
+        tabbedPane.addTab("No. Race Entrants", raceEntrantsCountPanel);
+        tabbedPane.addTab("No. Pool Entrants", poolEntrantsCountPanel);
+        tabbedPane.addTab("Prizes", prizesPanel);
 
         averagesPanel.setLayout(new java.awt.BorderLayout());
-        jTabbedPane1.addTab("Averages", averagesPanel);
+        tabbedPane.addTab("Averages", averagesPanel);
 
-        add(jTabbedPane1, java.awt.BorderLayout.CENTER);
+        add(tabbedPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
 private void daysCoveredComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_daysCoveredComboActionPerformed
@@ -370,7 +383,6 @@ private void daysCoveredComboActionPerformed(java.awt.event.ActionEvent evt) {//
     private javax.swing.JLabel darknessEndsText;
     private javax.swing.JComboBox daysCoveredCombo;
     private javax.swing.JLabel daysCoveredLabel;
-    private javax.swing.JTabbedPane jTabbedPane1;
     private pigeon.view.DateTimeComponent liberationDate;
     private javax.swing.JLabel liberationDateLabel;
     private javax.swing.JPanel poolEntrantsCountPanel;
@@ -379,6 +391,7 @@ private void daysCoveredComboActionPerformed(java.awt.event.ActionEvent evt) {//
     private javax.swing.JComboBox racepointCombo;
     private javax.swing.JLabel racepointLabel;
     private javax.swing.JPanel summaryPanel;
+    private javax.swing.JTabbedPane tabbedPane;
     private javax.swing.JLabel windDirectionLabel;
     private javax.swing.JTextField windDirectionText;
     // End of variables declaration//GEN-END:variables

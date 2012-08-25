@@ -55,14 +55,12 @@ public class ClubRegressionTest extends RegressionTestBase {
     
     public void testAveragesReports() throws IOException
     {
-        final boolean isClub = season.getOrganization().getType() == Organization.Type.CLUB;
-
         for (Race race: season.getRaces()) {
             AveragesReporter reporter = new AveragesReporter(season, race, configuration.getCompetitions(), configuration.getResultsFooter());
             RegressionStreamProvider streamProvider = new RegressionStreamProvider();
             reporter.write(streamProvider);
 
-            assertEquals(isClub, streamProvider.getFilenames().contains("Averages.html"));
+            assertEquals(true, streamProvider.getFilenames().contains("Averages.html"));
 
             checkRegression(streamProvider.getBytes("Averages.html"), "Averages_" + race.getRacepoint());
         }

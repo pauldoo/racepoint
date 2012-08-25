@@ -16,6 +16,7 @@
 
 package pigeon;
 
+import java.io.IOException;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
@@ -24,6 +25,8 @@ import junit.framework.TestSuite;
 import pigeon.model.Organization;
 import pigeon.model.Race;
 import pigeon.model.ValidationException;
+import pigeon.report.CompetitionReporter;
+import pigeon.report.Reporter;
 
 public class FederationRegressionTest extends RegressionTestBase {
 
@@ -63,4 +66,15 @@ public class FederationRegressionTest extends RegressionTestBase {
         }
         return race;
     }
+    
+    public void testPoolReports() throws IOException
+    {
+        for (Race race: season.getRaces()) {
+            Reporter reporter = new CompetitionReporter(season, race, configuration.getCompetitions(), configuration.getResultsFooter());
+            RegressionStreamProvider streamProvider = new RegressionStreamProvider();
+            reporter.write(streamProvider);
+
+            checkRegression(streamProvider.getBytes("Pools.html"), "Pools_" + race.getRacepoint());
+        }
+    }    
 }

@@ -67,9 +67,11 @@ import pigeon.model.Season;
 import pigeon.model.Sex;
 import pigeon.model.Time;
 import pigeon.model.ValidationException;
+import pigeon.report.CompetitionReporter;
 import pigeon.report.DistanceReporter;
 import pigeon.report.MembersReporter;
 import pigeon.report.RaceReporter;
+import pigeon.report.Reporter;
 import pigeon.view.Configuration;
 import pigeon.view.Utilities;
 
@@ -386,22 +388,11 @@ public abstract class RegressionTestBase extends TestCase
     public void testRaceReports() throws IOException
     {
         for (Race race: season.getRaces()) {
-            RaceReporter reporter = new RaceReporter(season, race, configuration.getCompetitions(), configuration.getResultsFooter());
+            Reporter reporter = new RaceReporter(season, race, configuration.getCompetitions(), configuration.getResultsFooter());
             RegressionStreamProvider streamProvider = new RegressionStreamProvider();
             reporter.write(streamProvider);
 
             checkRegression(streamProvider.getBytes("Race.html"), "Race_" + race.getRacepoint());
-        }
-    }
-
-    public void testPoolReports() throws IOException
-    {
-        for (Race race: season.getRaces()) {
-            RaceReporter reporter = new RaceReporter(season, race, configuration.getCompetitions(), configuration.getResultsFooter());
-            RegressionStreamProvider streamProvider = new RegressionStreamProvider();
-            reporter.write(streamProvider);
-
-            checkRegression(streamProvider.getBytes("Pools.html"), "Pools_" + race.getRacepoint());
         }
     }
 
