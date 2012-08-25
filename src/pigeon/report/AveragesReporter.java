@@ -34,23 +34,15 @@ import pigeon.model.Season;
     Federation and section results are generated on the same page.
 */
 public final class AveragesReporter implements Reporter {
-
-
     private final Season season;
-    private final Race race;
-    private final List<Competition> competitions;
     private final String resultsFooter;
 
     /** Creates a new instance of RaceReporter */
     public AveragesReporter(
         Season season,
-        Race race,
-        List<Competition> competitions,
         String resultsFooter
     ) {
         this.season = season;
-        this.race = race;
-        this.competitions = competitions;
         this.resultsFooter = resultsFooter;
     }
 
@@ -69,14 +61,11 @@ public final class AveragesReporter implements Reporter {
             throw new IllegalArgumentException("Averages only used in Club setting");
         }
         
-        String raceDate = pigeon.view.Utilities.DATE_FORMAT.format(race.getLiberationDate());
-        String raceTime = pigeon.view.Utilities.TIME_FORMAT_WITH_LOCALE.format(race.getLiberationDate());
-        PrintStream out = Utilities.writeHtmlHeader(stream, race.getRacepoint().toString() + " on " + raceDate);
+        String title = String.format("%s Averages", season.getOrganization().getName());
+        PrintStream out = Utilities.writeHtmlHeader(stream, title);
 
         out.println("<div class=\"outer last\">");
-        out.println("<h1>" + season.getOrganization().getName() + "</h1>");
-        out.println("<h2>Race from " + race.getRacepoint().toString() + "</h2>");
-        out.println("<h3>Liberated at " + raceTime + " on " + raceDate + " in a " + race.getWindDirection() + " wind</h3>");
+        out.println("<h1>" + title + "</h1>");
         
         SortedSet<Average> averages = pigeon.view.Utilities.getAverages(season.getRaces());
         for (Average avg: averages) {

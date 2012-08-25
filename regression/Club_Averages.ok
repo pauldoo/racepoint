@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>Racepoint #1 on 10/08/08</title>
+  <title>Test fed Averages</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <style type="text/css" media="screen">
     body { font-family: Verdana, sans-serif; white-space: nowrap; }
@@ -34,9 +34,7 @@
 </head>
 <body>
 <div class="outer last">
-<h1>Test fed</h1>
-<h2>Race from Racepoint #1</h2>
-<h3>Liberated at 09:08:00 on 10/08/08 in a null wind</h3>
+<h1>Test fed Averages</h1>
 <h3>hello</h3>
 <table>
 <tr><th>Member</th><th>Miles</th><th>Yards</th><th>Time</th><th>Average</th></tr>

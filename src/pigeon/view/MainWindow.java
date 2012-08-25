@@ -156,10 +156,12 @@ final class MainWindow extends javax.swing.JFrame {
         raceresultsTable = new javax.swing.JTable();
         raceresultButtonPanel = new javax.swing.JPanel();
         raceresultAddButton = new javax.swing.JButton();
+        raceresultCalculateAveragesButton = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
         raceresultEditButton = new javax.swing.JButton();
         raceresultDeleteButton = new javax.swing.JButton();
         raceresultCalculateResultsButton = new javax.swing.JButton();
-        raceresultCalculateAveragesButton = new javax.swing.JButton();
+        voidFillingPanel = new javax.swing.JPanel();
         seasonNameLabel = new javax.swing.JLabel();
         menuBar = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
@@ -408,9 +410,25 @@ final class MainWindow extends javax.swing.JFrame {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
         raceresultButtonPanel.add(raceresultAddButton, gridBagConstraints);
+
+        raceresultCalculateAveragesButton.setText("Calculate Averages");
+        raceresultCalculateAveragesButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                raceresultCalculateAveragesButtonActionPerformed(evt);
+            }
+        });
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        raceresultButtonPanel.add(raceresultCalculateAveragesButton, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        gridBagConstraints.insets = new java.awt.Insets(5, 0, 5, 0);
+        raceresultButtonPanel.add(jSeparator1, gridBagConstraints);
 
         raceresultEditButton.setText("Edit Race");
         raceresultEditButton.addActionListener(new java.awt.event.ActionListener() {
@@ -420,9 +438,7 @@ final class MainWindow extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
         raceresultButtonPanel.add(raceresultEditButton, gridBagConstraints);
 
         raceresultDeleteButton.setText("Delete Race");
@@ -433,9 +449,7 @@ final class MainWindow extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
         raceresultButtonPanel.add(raceresultDeleteButton, gridBagConstraints);
 
         raceresultCalculateResultsButton.setText("Calculate Results");
@@ -446,24 +460,12 @@ final class MainWindow extends javax.swing.JFrame {
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
         raceresultButtonPanel.add(raceresultCalculateResultsButton, gridBagConstraints);
-
-        raceresultCalculateAveragesButton.setText("Calculate Averages");
-        raceresultCalculateAveragesButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                raceresultCalculateAveragesButtonActionPerformed(evt);
-            }
-        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
         gridBagConstraints.weighty = 1.0;
-        raceresultButtonPanel.add(raceresultCalculateAveragesButton, gridBagConstraints);
+        raceresultButtonPanel.add(voidFillingPanel, gridBagConstraints);
 
         raceresultPanel.add(raceresultButtonPanel, java.awt.BorderLayout.EAST);
 
@@ -974,10 +976,10 @@ final class MainWindow extends javax.swing.JFrame {
         racepointEditButton.setEnabled( racepointsList.getSelectedIndex() != -1 );
         racepointDeleteButton.setEnabled( racepointsList.getSelectedIndex() != -1 );
 
+        raceresultCalculateAveragesButton.setEnabled( season != null && season.getRaces().isEmpty() == false && modeIs(Organization.Type.CLUB));
         raceresultEditButton.setEnabled( raceresultsTable.getSelectedRow() != -1 );
         raceresultDeleteButton.setEnabled( raceresultsTable.getSelectedRow() != -1 );
         raceresultCalculateResultsButton.setEnabled( raceresultsTable.getSelectedRow() != -1 );
-        raceresultCalculateAveragesButton.setEnabled( raceresultsTable.getSelectedRow() != -1 && modeIs(Organization.Type.CLUB));
     }
 
     private void refreshMenus(String cardName) {
@@ -1017,9 +1019,7 @@ final class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_organizationTypeActionPerformed
 
     private void raceresultCalculateAveragesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_raceresultCalculateAveragesButtonActionPerformed
-        int index = raceresultsTable.getSelectedRow();
-        Race race = season.getRaces().get(index);
-        writeReport(new AveragesReporter(season, race, configuration.getCompetitions(), configuration.getResultsFooter()));
+        writeReport(new AveragesReporter(season, configuration.getResultsFooter()));
     }//GEN-LAST:event_raceresultCalculateAveragesButtonActionPerformed
 
     private static Organization editDistancesForMember(Component parent, Organization organization, Member member) throws UserCancelledException {
@@ -1117,6 +1117,7 @@ final class MainWindow extends javax.swing.JFrame {
     private javax.swing.JMenu fileMenu;
     private javax.swing.JButton finishedButton;
     private javax.swing.JMenu helpMenu;
+    private javax.swing.JSeparator jSeparator1;
     private javax.swing.JButton loadSeasonButton;
     private javax.swing.JPanel mainMenuPanel;
     private javax.swing.JPanel mainPanel;
@@ -1160,5 +1161,6 @@ final class MainWindow extends javax.swing.JFrame {
     private javax.swing.JMenuItem viewMembersItem;
     private javax.swing.JMenuItem viewRacepointDistancesItem;
     private javax.swing.JPanel viewingSeason;
+    private javax.swing.JPanel voidFillingPanel;
     // End of variables declaration//GEN-END:variables
 }

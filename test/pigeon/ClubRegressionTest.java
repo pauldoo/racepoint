@@ -26,6 +26,7 @@ import pigeon.model.Race;
 import pigeon.model.Utilities;
 import pigeon.model.ValidationException;
 import pigeon.report.AveragesReporter;
+import pigeon.report.Reporter;
 
 /**
 
@@ -55,15 +56,13 @@ public class ClubRegressionTest extends RegressionTestBase {
     
     public void testAveragesReports() throws IOException
     {
-        for (Race race: season.getRaces()) {
-            AveragesReporter reporter = new AveragesReporter(season, race, configuration.getCompetitions(), configuration.getResultsFooter());
-            RegressionStreamProvider streamProvider = new RegressionStreamProvider();
-            reporter.write(streamProvider);
+        Reporter reporter = new AveragesReporter(season, configuration.getResultsFooter());
+        RegressionStreamProvider streamProvider = new RegressionStreamProvider();
+        reporter.write(streamProvider);
 
-            assertEquals(true, streamProvider.getFilenames().contains("Averages.html"));
+        assertEquals(true, streamProvider.getFilenames().contains("Averages.html"));
 
-            checkRegression(streamProvider.getBytes("Averages.html"), "Averages_" + race.getRacepoint());
-        }
+        checkRegression(streamProvider.getBytes("Averages.html"), "Averages");
     }
 
     @Override
