@@ -88,6 +88,7 @@ public enum DateTimeDisplayMode
         if (isIntendedFor24HourRelativeFormat()) {
             result.setTimeZone(TimeZone.getTimeZone("GMT"));
         }
+        result.setLenient(false);
         return result;
     }
 }
