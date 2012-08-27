@@ -188,17 +188,17 @@ final class RaceSummary extends javax.swing.JPanel {
         updateHoursOfDarknessEnabledStatus();
         
         if (club.getType() == Organization.Type.CLUB) {
-            setTabEnabled(poolEntrantsCountPanel, false);
-            setTabEnabled(prizesPanel, false);
+            removeTab(poolEntrantsCountPanel);
+            removeTab(prizesPanel);
         }
     }
 
-    private void setTabEnabled(Component component, boolean enabled) {
+    private void removeTab(Component component) {
         final int index = tabbedPane.indexOfComponent(component);
         if (index == -1) {
             throw new IllegalArgumentException("Component not present in tab panel");
         }
-        tabbedPane.setEnabledAt(index, enabled);
+        tabbedPane.removeTabAt(index);
     }
 
     private void addComboOptions(Season season, Configuration configuration) {
