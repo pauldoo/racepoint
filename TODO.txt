@@ -1,5 +1,3 @@
-Show ring velocities while clock times are being entered.
-
 Converting between fed and club modes:
     Leaves the member data messy. - problematic
     Leaves the race data messy. - more problematic

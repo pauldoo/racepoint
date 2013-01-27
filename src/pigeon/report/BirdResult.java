@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2005, 2006, 2007, 2012 Paul Richards <paul.richards@gmail.com>
+    Copyright (c) 2005, 2006, 2007, 2012, 2013 Paul Richards <paul.richards@gmail.com>
 
     Permission to use, copy, modify, and/or distribute this software for any
     purpose with or without fee is hereby granted, provided that the above
@@ -25,7 +25,7 @@ import pigeon.model.Time;
 
     Used by the RaceReporter and CompetitionReporter classes.
 */
-final class BirdResult implements Comparable<BirdResult>
+public final class BirdResult implements Comparable<BirdResult>
 {
     public final double velocityInMetresPerSecond;
     public final Time time;

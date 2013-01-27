@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2005, 2006, 2007, 2008, 2012 Paul Richards <paul.richards@gmail.com>
+    Copyright (c) 2005, 2006, 2007, 2008, 2012, 2013 Paul Richards <paul.richards@gmail.com>
 
     Permission to use, copy, modify, and/or distribute this software for any
     purpose with or without fee is hereby granted, provided that the above
@@ -16,6 +16,7 @@
 
 package pigeon.view;
 
+import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -23,6 +24,8 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import pigeon.model.Clock;
 import pigeon.model.Constants;
+import pigeon.model.Organization;
+import pigeon.model.Race;
 import pigeon.model.Sex;
 import pigeon.model.Time;
 
@@ -33,14 +36,16 @@ final class TimesTableModel extends AbstractTableModel
 {
     private static final long serialVersionUID = 2820658767004438666L;
 
+    private final Organization club;
+    private final Race race;
     private final Clock clock;
-    private final int daysInRace;
     private final boolean editable;
 
-    public TimesTableModel(Clock clock, int daysInRace, boolean editable)
+    public TimesTableModel(Organization club, Race race, Clock clock, boolean editable)
     {
+        this.club = club;
+        this.race = race;
         this.clock = clock;
-        this.daysInRace = daysInRace;
         this.editable = editable;
     }
 
@@ -51,7 +56,7 @@ final class TimesTableModel extends AbstractTableModel
 
     @Override
     public int getColumnCount() {
-        return 5;
+        return 6;
     }
 
     Time getEntry(int row) {
@@ -80,6 +85,8 @@ final class TimesTableModel extends AbstractTableModel
                 return String.class;
             case 4:
                 return Sex.class;
+            case 5:
+                return BigDecimal.class;
             default:
                 throw new IllegalArgumentException();
         }
@@ -100,9 +107,20 @@ final class TimesTableModel extends AbstractTableModel
                 return entry.getColor();
             case 4:
                 return entry.getSex();
+            case 5:
+                final double velocityInYardsPerMinute =
+                    pigeon.report.Utilities.calculateVelocity(club, race, clock, entry).velocityInMetresPerSecond *
+                    Constants.METRES_PER_SECOND_TO_YARDS_PER_MINUTE;
+                
+                return round(velocityInYardsPerMinute, 3);
             default:
                 throw new IllegalArgumentException();
         }
+    }
+    
+    private static BigDecimal round(double value, int decimalPlaces)
+    {
+        return BigDecimal.valueOf(Math.round(value * Math.pow(10, decimalPlaces)), decimalPlaces);
     }
 
     @Override
@@ -118,6 +136,8 @@ final class TimesTableModel extends AbstractTableModel
                 return "Bird Color";
             case 4:
                 return "Bird Sex";
+            case 5:
+                return "Velocity";
             default:
                 throw new IllegalArgumentException();
         }

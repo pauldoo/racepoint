@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2005, 2006, 2007, 2008, 2009, 2012 Paul Richards <paul.richards@gmail.com>
+    Copyright (c) 2005, 2006, 2007, 2008, 2009, 2012, 2013 Paul Richards <paul.richards@gmail.com>
 
     Permission to use, copy, modify, and/or distribute this software for any
     purpose with or without fee is hereby granted, provided that the above
@@ -38,7 +38,7 @@ public final class About
     }
 
     /**
-        Attempt to read the Subversion ID from the BuildID.txt file inside the Jar file.
+        Attempt to read the Git ID from the BuildID.txt file inside the Jar file.
 
         Returns "unknown" if this cannot be found.
     */
