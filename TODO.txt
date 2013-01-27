@@ -1,7 +1,13 @@
+Show ring velocities while clock times are being entered.
+
 Converting between fed and club modes:
     Leaves the member data messy. - problematic
     Leaves the race data messy. - more problematic
     Remove ability to change between modes??
+
+Lock down members after the first race is entered:
+    Disable deletion.
+    Disable editing of distances.
 
 Drop getters for read-only fields in model files.
 
@@ -14,3 +20,5 @@ Revisit which bits of functionality are needed for club vs fed.
 Migrate tests to JUnit 4.
 
 HTML escape report outputs.
+
+Rewrite the whole thing as a web app.  (?!)
