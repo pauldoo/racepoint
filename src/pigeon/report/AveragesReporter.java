@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2005, 2006, 2007, 2008, 2011, 2012 Paul Richards <paul.richards@gmail.com>
+    Copyright (c) 2005, 2006, 2007, 2008, 2011, 2012, 2013 Paul Richards <paul.richards@gmail.com>
 
     Permission to use, copy, modify, and/or distribute this software for any
     purpose with or without fee is hereby granted, provided that the above
@@ -62,7 +62,7 @@ public final class AveragesReporter implements Reporter {
         }
         
         String title = String.format("%s Averages", season.getOrganization().getName());
-        PrintStream out = Utilities.writeHtmlHeader(stream, title);
+        PrintStream out = Utilities.writeHtmlHeader(stream, title, season.getOrganization().getType());
 
         out.println("<div class=\"outer last\">");
         out.println("<h1>" + title + "</h1>");

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2005, 2006, 2007, 2008, 2012 Paul Richards <paul.richards@gmail.com>
+    Copyright (c) 2005, 2006, 2007, 2008, 2012, 2013 Paul Richards <paul.richards@gmail.com>
 
     Permission to use, copy, modify, and/or distribute this software for any
     purpose with or without fee is hereby granted, provided that the above
@@ -630,7 +630,7 @@ final class MainWindow extends javax.swing.JFrame {
         if (choice == JOptionPane.OK_OPTION) {
             Racepoint racepoint = (Racepoint)racepointList.getSelectedItem();
             DistanceReporter<Member> reporter = new DistanceReporter<Member>(
-                season.getOrganization().toString(),
+                season.getOrganization(),
                 racepoint.toString(),
                 "Member",
                 season.getOrganization().getDistancesForRacepoint(racepoint)
@@ -651,7 +651,7 @@ final class MainWindow extends javax.swing.JFrame {
         if (choice == JOptionPane.OK_OPTION) {
             Member member = (Member)memberList.getSelectedItem();
             DistanceReporter<Racepoint> reporter = new DistanceReporter<Racepoint>(
-                season.getOrganization().toString(),
+                season.getOrganization(),
                 member.toString(),
                 "Racepoint",
                 season.getOrganization().getDistancesForMember(member)

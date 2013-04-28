@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2005, 2006, 2007, 2008, 2011, 2012 Paul Richards <paul.richards@gmail.com>
+    Copyright (c) 2005, 2006, 2007, 2008, 2011, 2012, 2013 Paul Richards <paul.richards@gmail.com>
 
     Permission to use, copy, modify, and/or distribute this software for any
     purpose with or without fee is hereby granted, provided that the above
@@ -68,7 +68,7 @@ public final class RaceReporter implements Reporter {
     private void writeRaceReport(final OutputStream raceReportStream) throws IOException {
         String raceDate = pigeon.view.Utilities.DATE_FORMAT.format(race.getLiberationDate());
         String raceTime = pigeon.view.Utilities.TIME_FORMAT_WITH_LOCALE.format(race.getLiberationDate());
-        PrintStream out = Utilities.writeHtmlHeader(raceReportStream, race.getRacepoint().toString() + " on " + raceDate);
+        PrintStream out = Utilities.writeHtmlHeader(raceReportStream, race.getRacepoint().toString() + " on " + raceDate, season.getOrganization().getType());
         Organization club = season.getOrganization();
         
         List<String> sections = pigeon.model.Utilities.allSections(club, true);

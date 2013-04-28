@@ -14,6 +14,7 @@
     h3 { font-size:14pt; }
     h2, h3 { margin-top:0; margin-bottom:5px; }
     table { width:95%; border:1px solid #000000; border-collapse:collapse; font-size:8pt; margin-top:20px; }
+    body.club table { font-size:10pt; }
     th { border-bottom:3px solid #000000; text-align: left; }
     td { border-bottom:1px solid #000000; page-break-inside:avoid; padding:3px 0 3px 0; text-align: left; }
     .numeric { text-align: right; }
@@ -27,12 +28,13 @@
     h3 { font-size:14pt; }
     h2, h3 { margin-top:0; margin-bottom:5px; }
     table { width:95%; border:1px solid #000000; border-collapse:collapse; font-size:6pt; margin-top:20px; }
+    body.club table { font-size:9pt; }
     th { border-bottom:3px solid #000000; text-align: left; }
     td { border-bottom:1px solid #000000; page-break-inside:avoid; padding:3px 0 3px 0; text-align: left; }
     .numeric { text-align: right; }
   </style>
 </head>
-<body>
+<body class="federation">
 <div class='outer'>
 <h1>Test fed</h1>
 <h2>Distances for Member #10</h2>

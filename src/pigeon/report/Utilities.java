@@ -56,7 +56,7 @@ public final class Utilities
     {
     }
 
-    public static PrintStream writeHtmlHeader(OutputStream stream, String title) throws IOException
+    public static PrintStream writeHtmlHeader(OutputStream stream, String title, Organization.Type orgType) throws IOException
     {
         PrintStream out = new PrintStream(stream, false, "UTF-8");
 
@@ -76,6 +76,7 @@ public final class Utilities
         out.println("    h3 { font-size:14pt; }");
         out.println("    h2, h3 { margin-top:0; margin-bottom:5px; }");
         out.println("    table { width:95%; border:1px solid #000000; border-collapse:collapse; font-size:8pt; margin-top:20px; }");
+        out.println("    body.club table { font-size:10pt; }");
         out.println("    th { border-bottom:3px solid #000000; text-align: left; }");
         out.println("    td { border-bottom:1px solid #000000; page-break-inside:avoid; padding:3px 0 3px 0; text-align: left; }");
         out.println("    .numeric { text-align: right; }");
@@ -89,12 +90,13 @@ public final class Utilities
         out.println("    h3 { font-size:14pt; }");
         out.println("    h2, h3 { margin-top:0; margin-bottom:5px; }");
         out.println("    table { width:95%; border:1px solid #000000; border-collapse:collapse; font-size:6pt; margin-top:20px; }");
+        out.println("    body.club table { font-size:9pt; }");
         out.println("    th { border-bottom:3px solid #000000; text-align: left; }");
         out.println("    td { border-bottom:1px solid #000000; page-break-inside:avoid; padding:3px 0 3px 0; text-align: left; }");
         out.println("    .numeric { text-align: right; }");
         out.println("  </style>");
         out.println("</head>");
-        out.println("<body>");
+        out.println("<body class=\"" + orgType.name().toLowerCase() + "\">");
         if (out.checkError()) {
             throw new IOException();
         }

@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2005, 2006, 2007, 2008, 2012 Paul Richards <paul.richards@gmail.com>
+    Copyright (c) 2005, 2006, 2007, 2008, 2012, 2013 Paul Richards <paul.richards@gmail.com>
 
     Permission to use, copy, modify, and/or distribute this software for any
     purpose with or without fee is hereby granted, provided that the above
@@ -359,7 +359,7 @@ public abstract class RegressionTestBase extends TestCase
     {
         for (Member member: season.getOrganization().getMembers()) {
             DistanceReporter<Racepoint> reporter = new DistanceReporter<Racepoint>(
-                season.getOrganization().getName(),
+                season.getOrganization(),
                 member.toString(),
                 "Racepoint",
                 season.getOrganization().getDistancesForMember(member));
@@ -374,7 +374,7 @@ public abstract class RegressionTestBase extends TestCase
     {
         for (Racepoint racepoint: season.getOrganization().getRacepoints()) {
             DistanceReporter<Member> reporter = new DistanceReporter<Member>(
-                season.getOrganization().getName(),
+                season.getOrganization(),
                 racepoint.toString(),
                 "Member",
                 season.getOrganization().getDistancesForRacepoint(racepoint));

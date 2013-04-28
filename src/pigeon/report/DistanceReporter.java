@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2005, 2006, 2007, 2008, 2012 Paul Richards <paul.richards@gmail.com>
+    Copyright (c) 2005, 2006, 2007, 2008, 2012, 2013 Paul Richards <paul.richards@gmail.com>
 
     Permission to use, copy, modify, and/or distribute this software for any
     purpose with or without fee is hereby granted, provided that the above
@@ -21,18 +21,19 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.Map;
 import pigeon.model.Distance;
+import pigeon.model.Organization;
 
 /**
     Produces an HTML report of the distances for a member or racepoint.
 */
 public final class DistanceReporter<Target> implements Reporter
 {
-    final String organization;
+    final Organization organization;
     final String source;
     final String targetTypeName;
     final Map<Target, Distance> distances;
 
-    public DistanceReporter(String organization, String source, String targetTypeName, Map<Target, Distance> distances)
+    public DistanceReporter(Organization organization, String source, String targetTypeName, Map<Target, Distance> distances)
     {
         this.organization = organization;
         this.source = source;
@@ -44,9 +45,9 @@ public final class DistanceReporter<Target> implements Reporter
     public void write(StreamProvider streamProvider) throws IOException
     {
         final OutputStream stream = streamProvider.createNewStream("Distances.html", true);
-        PrintStream out = Utilities.writeHtmlHeader(stream, "Distances for " + source);
+        PrintStream out = Utilities.writeHtmlHeader(stream, "Distances for " + source, organization.getType());
         out.println("<div class='outer'>");
-        out.println("<h1>" + organization + "</h1>");
+        out.println("<h1>" + organization.getName() + "</h1>");
         out.println("<h2>Distances for " + source + "</h2>");
 
         out.println("<table>");
